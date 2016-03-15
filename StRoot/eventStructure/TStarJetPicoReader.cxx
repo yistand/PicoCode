@@ -49,6 +49,8 @@ TStarJetPicoReader::TStarJetPicoReader()
   , fApplyMIPCorrection(kTRUE)
   , fApplyFractionHadronicCorrection(kFALSE)
   , fFractionHadronicCorrection(0.3)
+  , fTrackPileUpCut(0)		// #ly Li Yi 2015.10.19         whether apply pile up cut, currently matching TPC tracks to bemc or tof
+				// #ly Li Yi 2016.01.22		0: no pile up cut. 1: match to bemc or tof. 2: match to tof. 3: match to bemc
 {
   //
   // Default constructor
@@ -141,6 +143,17 @@ void TStarJetPicoReader::SetFractionHadronicCorrection(Double_t val)
     {
       SetApplyFractionHadronicCorrection(kFALSE);
     }
+}
+
+//-----------------------------------------
+//// #ly Li Yi 2015.10.19
+void TStarJetPicoReader::SetTrackPileUpCut(int val) 
+{
+  //
+  // Set flag to apply Pile Up cut or not fTrackPileUpCut
+  //
+
+  fTrackPileUpCut = val;
 }
 
 Bool_t TStarJetPicoReader::LoadEvent()
@@ -310,6 +323,16 @@ Bool_t TStarJetPicoReader::LoadTracks(TArrayI *trackIdsToRemove)
       if (IsKeyInArray(ptrack->GetKey(), trackIdsToRemove) == kTRUE)
 	continue;
 
+      // #ly Li Yi 2015.10.19         whether apply pile up cut, currently matching TPC tracks to bemc or tof
+      if (fTrackPileUpCut == 1 && fTrackCuts->IsBemcTofMatchedOK(ptrack) == kFALSE) 
+        continue;
+
+      if (fTrackPileUpCut == 2 && fTrackCuts->IsTofMatchedOK(ptrack) == kFALSE) 
+        continue;
+
+      if (fTrackPileUpCut == 3 && fTrackCuts->IsBemcMatchedOK(ptrack) == kFALSE) 
+        continue;
+
       if (fTrackCuts->IsTrackOK(ptrack) == kTRUE)
 	{
 	  Double_t pt = TMath::Sqrt(ptrack->GetPx()*ptrack->GetPx() + ptrack->GetPy()*ptrack->GetPy());
@@ -328,6 +351,7 @@ Bool_t TStarJetPicoReader::LoadTracks(TArrayI *trackIdsToRemove)
 	  part.SetFeatureD(TStarJetVector::_NSIGMA_PROTON, ptrack->GetNsigmaProton());      
 	  part.SetFeatureD(TStarJetVector::_NSIGMA_ELECTRON, ptrack->GetNsigmaElectron()); 
 	  part.SetFeatureD(TStarJetVector::_DEDX, ptrack->GetdEdx());
+	  part.SetFeatureD(TStarJetVector::_TOFBETA, ptrack->GetTofBeta());
 	  part.SetTrackID(-1);
 
 	  part.SetFeatureI(TStarJetVector::_KEY, ptrack->GetKey());
