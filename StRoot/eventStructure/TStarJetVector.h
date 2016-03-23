@@ -62,7 +62,8 @@ class TStarJetVector : public TLorentzVector
       _NSIGMA_KAON   = 3,      
       _NSIGMA_PROTON = 4,
       _NSIGMA_ELECTRON = 5,
-      _DEDX          = 6
+      _DEDX          = 6,
+      _TOFBETA       = 7	//#ly Li Yi 2015.10.20 add TOF beta for PID
     };
 
   enum _FEATUREINDEX_I 

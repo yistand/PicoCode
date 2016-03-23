@@ -13,7 +13,6 @@ TStarJetPicoPrimaryTrack::TStarJetPicoPrimaryTrack()
   , fPz(0)                        
   , fDCA(0)            
   , fdEdx(0)           
-  , fdEdxPoints(0)           
   , fNsigmaPion(0)   
   , fNsigmaKaon(0)   
   , fNsigmaProton(0)
@@ -22,8 +21,6 @@ TStarJetPicoPrimaryTrack::TStarJetPicoPrimaryTrack()
   , fChi2(0)
   , fChi2PV(0)
   , fFlag(0)
-  , fBemcMatchFlag(0)
-  , fTofMatchFlag(0)
   , fTofTime(-9.)
   , fTofBeta(-9.)
   , fTofyLocal(-9.)
@@ -42,7 +39,6 @@ TStarJetPicoPrimaryTrack::TStarJetPicoPrimaryTrack(const TStarJetPicoPrimaryTrac
   , fPz(t.fPz)                      
   , fDCA(t.fDCA)            
   , fdEdx(t.fdEdx)           
-  , fdEdxPoints(t.fdEdxPoints)           
   , fNsigmaPion(t.fNsigmaPion)   
   , fNsigmaKaon(t.fNsigmaKaon)   
   , fNsigmaProton(t.fNsigmaProton)
@@ -51,8 +47,6 @@ TStarJetPicoPrimaryTrack::TStarJetPicoPrimaryTrack(const TStarJetPicoPrimaryTrac
   , fChi2(t.fChi2)
   , fChi2PV(t.fChi2PV)
   , fFlag(t.fFlag)
-  , fBemcMatchFlag(t.fBemcMatchFlag)
-  , fTofMatchFlag(t.fTofMatchFlag)
   , fTofTime(t.fTofTime)
   , fTofBeta(t.fTofBeta)
   , fTofyLocal(t.fTofyLocal)
@@ -76,7 +70,6 @@ void TStarJetPicoPrimaryTrack::Clear(Option_t */*Option*/)
   fPz = 0;                      
   fDCA = 0;            
   fdEdx = 0;           
-  fdEdxPoints = 0;           
   fNsigmaPion = 0;   
   fNsigmaKaon = 0;   
   fNsigmaProton = 0;
@@ -85,8 +78,6 @@ void TStarJetPicoPrimaryTrack::Clear(Option_t */*Option*/)
   fChi2 = 0;
   fChi2PV = 0;
   fFlag = 0;
-  fBemcMatchFlag = 0;
-  fTofMatchFlag = 0;
   fTofTime = -9.;
   fTofBeta = -9.;
   fTofyLocal = -9.;

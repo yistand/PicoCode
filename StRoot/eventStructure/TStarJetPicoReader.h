@@ -39,6 +39,7 @@ class TStarJetPicoReader : public TStarJetPicoReaderBase
   void SetApplyMIPCorrection(Bool_t val);
   void SetApplyFractionHadronicCorrection(Bool_t val);
   void SetFractionHadronicCorrection(Double_t val);
+  void SetTrackPileUpCut(int val);
 
   virtual void SetEventCuts(TStarJetPicoEventCuts* evCuts);
   virtual void SetTrackCuts(TStarJetPicoTrackCuts* trCuts);
@@ -70,6 +71,9 @@ class TStarJetPicoReader : public TStarJetPicoReaderBase
   Bool_t   fApplyMIPCorrection; // Apply MIP or not? Exclusive with fApplyFractionHadronicCorrection
   Bool_t   fApplyFractionHadronicCorrection; // Another type of charge particles energy depostion in EMC.
   Double_t fFractionHadronicCorrection; // Fraction of momentum of the TPC track to be subtracted from EMC tower.
+ 
+  Int_t   fTrackPileUpCut;	// #ly Li Yi 2015.10.19		whether apply pile up cut, currently matching TPC tracks to bemc or tof
+				// #ly Li Yi 2016.01.22		0: no pile up cut. 1: match to bemc or tof. 2: match to tof
   
   // DEBUG
   /// To count the number of rejected towers

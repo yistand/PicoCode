@@ -144,6 +144,8 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
 		    __DEBUG(2,"High-multiplicity Trigger p+p events run 12 selected"); 
 		    return kTRUE;
 		}
+		else
+		  return kFALSE;
 	      }
 
 	}      
@@ -527,7 +529,8 @@ Bool_t TStarJetPicoEventCuts::CheckEvent(TStarJetPicoEvent *mEv, TChain *fInputT
 Bool_t TStarJetPicoEventCuts::IsEventOK(TStarJetPicoEvent *mEv, TChain *fInputTree)
 {
   Bool_t retval;
-  retval = (IsRefMultOK(mEv) && IsRefCentOK(mEv, fInputTree) && IsVertexZOK(mEv) && IsTriggerIdOK(mEv) && (fFlagPVRankingCut==kFALSE || IsPVRankingOK(mEv)) );
+  //#ly retval = (IsRefMultOK(mEv) && IsRefCentOK(mEv, fInputTree) && IsVertexZOK(mEv) && IsTriggerIdOK(mEv) && (fFlagPVRankingCut==kFALSE || IsPVRankingOK(mEv)) );
+  retval = (IsRefMultOK(mEv) && IsRefCentOK(mEv, fInputTree) && IsVertexZOK(mEv) && IsTriggerIdOK(mEv) && (fFlagPVRankingCut==kFALSE || IsPVRankingOK(mEv)) && IsVertexZDiffOK(mEv) );	//#ly new data has VPD information
   
   //cuts for dAu2008
   Int_t run = mEv->GetHeader()->GetRunId();

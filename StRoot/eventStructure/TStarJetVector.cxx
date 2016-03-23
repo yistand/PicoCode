@@ -26,7 +26,7 @@
 
 ClassImp(TStarJetVector)
 
-#define __TStarJetVector_NfeauresD 7
+#define __TStarJetVector_NfeauresD 8
 #define __TStarJetVector_NfeauresI 5
 
 TStarJetVector::TStarJetVector()

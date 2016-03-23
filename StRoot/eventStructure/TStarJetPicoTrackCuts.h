@@ -13,6 +13,9 @@ class TStarJetPicoTrackCuts : public TObject
   virtual ~TStarJetPicoTrackCuts() {;} // nothing to delete
 
   virtual Bool_t   IsDCAOK(TStarJetPicoPrimaryTrack *tr);
+  virtual Bool_t   IsBemcTofMatchedOK(TStarJetPicoPrimaryTrack *tr);
+  virtual Bool_t   IsBemcMatchedOK(TStarJetPicoPrimaryTrack *tr);
+  virtual Bool_t   IsTofMatchedOK(TStarJetPicoPrimaryTrack *tr);
   virtual Bool_t   IsMinNFitPointsOK(TStarJetPicoPrimaryTrack *tr);
   virtual Bool_t   IsFitOverMaxPointsOK(TStarJetPicoPrimaryTrack *tr);
   virtual Bool_t   IsMaxPtOK(TStarJetPicoPrimaryTrack *tr);

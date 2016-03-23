@@ -87,10 +87,10 @@ void TStarJetPicoTriggerInfo::Clear(Option_t */*Option*/){
 }
 //____________________________________________________
 void TStarJetPicoTriggerInfo::PrintInfo(){
-  std::cout<<"=============== Trigger Info =============="<<std::endl;
-  if(fTrigFlag==1)std::cout<<"HTL0;  eta="<<fEta<<"   phi="<<fPhi<<"   id="<<fId<<"   ADC="<<fADC<<std::endl;
-  if(fTrigFlag==2)std::cout<<"JPL0;  eta="<<fEta<<"   phi="<<fPhi<<"   id="<<fId<<"   ADC="<<fADC<<std::endl;
-  if(fTrigFlag==3)std::cout<<"HTL2;  eta="<<fEta<<"   phi="<<fPhi<<"   id="<<fId<<"   ADC="<<fADC<<std::endl;
-  if(fTrigFlag==4)std::cout<<"JPL2;  eta="<<fEta<<"   phi="<<fPhi<<"   id="<<fId<<"   ADC="<<fADC<<std::endl;
-  std::cout<<"=========================================="<<std::endl;
+  cout<<"=============== Trigger Info =============="<<endl;
+  if(fTrigFlag==1)cout<<"HTL0;  eta="<<fEta<<"   phi="<<fPhi<<"   id="<<fId<<"   ADC="<<fADC<<endl;
+  if(fTrigFlag==2)cout<<"JPL0;  eta="<<fEta<<"   phi="<<fPhi<<"   id="<<fId<<"   ADC="<<fADC<<endl;
+  if(fTrigFlag==3)cout<<"HTL2;  eta="<<fEta<<"   phi="<<fPhi<<"   id="<<fId<<"   ADC="<<fADC<<endl;
+  if(fTrigFlag==4)cout<<"JPL2;  eta="<<fEta<<"   phi="<<fPhi<<"   id="<<fId<<"   ADC="<<fADC<<endl;
+  cout<<"=========================================="<<endl;
 }

@@ -47,6 +47,42 @@ TStarJetPicoTrackCuts::TStarJetPicoTrackCuts(const TStarJetPicoTrackCuts &t)
 {
   __DEBUG(2, "Copy track cuts.");  
 }
+// -----------------------------------------
+// #ly Li Yi 2015.10.19
+Bool_t TStarJetPicoTrackCuts::IsBemcTofMatchedOK(TStarJetPicoPrimaryTrack *tr)
+{
+  return IsTofMatchedOK(tr) && IsBemcMatchedOK(tr);
+}
+
+
+// #ly Li Yi 2015.10.19
+Bool_t TStarJetPicoTrackCuts::IsTofMatchedOK(TStarJetPicoPrimaryTrack *tr)
+{
+  if ((tr->GetTofMatchFlag()))
+    {
+      __DEBUG(9, Form("Accept. TOF Match flag" ));
+      return kTRUE; 
+    }
+
+  __DEBUG(9, Form("Reject. ! TOF Match flag"));
+  return kFALSE;
+}
+
+
+// #ly Li Yi 2015.10.19
+Bool_t TStarJetPicoTrackCuts::IsBemcMatchedOK(TStarJetPicoPrimaryTrack *tr)
+{
+  if (tr->GetBemcMatchFlag())
+    {
+      __DEBUG(9, Form("Accept. BEMC Match flag"));
+      return kTRUE; 
+    }
+
+  __DEBUG(9, Form("Reject. ! BEMC Match flag"));
+  return kFALSE;
+}
+
+// -----------------------------------------
 
 Bool_t TStarJetPicoTrackCuts::IsDCAOK(TStarJetPicoPrimaryTrack *tr)
 {
