@@ -191,7 +191,7 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
 	  __DEBUG(2, "Accept MB trigger for Au+Au.");
 	  return kTRUE;
 	}
-      else if (mTrigId==200001 || mTrigId==200003 || mTrigId==200013)
+      else if (mTrigId==350003 || mTrigId==350013 || mTrigId==350023 || mTrigId==350033 || mTrigId==350043)	// #ly 2016.03.24 fix Y11 AuAu MB trigger id 
 	{
 	  __DEBUG(2, "Accept MB trigger for Au+Au run 11.");
 	  return kTRUE;	  
@@ -529,11 +529,25 @@ Bool_t TStarJetPicoEventCuts::CheckEvent(TStarJetPicoEvent *mEv, TChain *fInputT
 Bool_t TStarJetPicoEventCuts::IsEventOK(TStarJetPicoEvent *mEv, TChain *fInputTree)
 {
   Bool_t retval;
-  //#ly retval = (IsRefMultOK(mEv) && IsRefCentOK(mEv, fInputTree) && IsVertexZOK(mEv) && IsTriggerIdOK(mEv) && (fFlagPVRankingCut==kFALSE || IsPVRankingOK(mEv)) );
-  retval = (IsRefMultOK(mEv) && IsRefCentOK(mEv, fInputTree) && IsVertexZOK(mEv) && IsTriggerIdOK(mEv) && (fFlagPVRankingCut==kFALSE || IsPVRankingOK(mEv)) && IsVertexZDiffOK(mEv) );	//#ly new data has VPD information
+  retval = (IsRefMultOK(mEv) && IsRefCentOK(mEv, fInputTree) && IsVertexZOK(mEv) && IsTriggerIdOK(mEv) && (fFlagPVRankingCut==kFALSE || IsPVRankingOK(mEv)) );
+  //#ly 16.03.24 maybe not suitable for pp data.      retval = (IsRefMultOK(mEv) && IsRefCentOK(mEv, fInputTree) && IsVertexZOK(mEv) && IsTriggerIdOK(mEv) && (fFlagPVRankingCut==kFALSE || IsPVRankingOK(mEv)) && IsVertexZDiffOK(mEv) );	//#ly new data has VPD information
+  
+  //#ly 16.03.24 if needed, print out what cuts are applied to the events
+  if(fFlagPVRankingCut) {
+    __DEBUG(1,Form("Event Cuts including: IsRefMultOK && IsRefCentOK && IsVertexZOK && IsTriggerIdOK && IsPVRankingOK"));
+  }
+  else {
+    __DEBUG(1,Form("Event Cuts including: IsRefMultOK && IsRefCentOK && IsVertexZOK && IsTriggerIdOK"));
+  }
+
+  Int_t run = mEv->GetHeader()->GetRunId();
+  //cuts for AuAu@200GeV run 11		#ly 16.03.24
+  if (run >= 12122026 && run <= 12171017) { // Run 11 AuAu cuts. get run range from http://online.star.bnl.gov/RunLogRun11/ with RUN PERIOD==AuAu@200GeV	#ly 16.03.24
+    if (IsVertexZDiffOK(mEv)==kFALSE)		// VpdVz - Vz
+      retval = kFALSE;
+  }
   
   //cuts for dAu2008
-  Int_t run = mEv->GetHeader()->GetRunId();
   if (run > 8313000 && run < 9029000) { // Run 8 dAu cuts
     if (IsBbceOK(mEv)==kFALSE)
       retval = kFALSE;
