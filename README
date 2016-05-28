@@ -1,3 +1,38 @@
 2016.01.21	Li Yi
 1. code to read STAR micro dst root files and produce smaller size pico dst file for jet-finding analysis.
 2. code to read the pico file for analysis
+
+2016.05.28  Li Yi
+How to use:
+
+1. `cp -r bemcCalibMacro.C StRoot/  ${some_local_dir}`
+    After copying files, need to clean the old libraries. rm all '*o' files and .slXX_gccXXX/ directory.
+
+2. `cd StRoot/JetPicoMaker/`
+   `./compile.csh`
+   Check any error for loading libTStarJetPico.so. (make sure all old libraries deleted before compile)
+
+3. `root4star bemcCalibMacro.C`
+
+
+
+
+If you want to add a new production from another year, here is how to do it:
+
+1. In bemcCalibMacro.C:
+change 'ana->SetFlagData(11);' to unused flag.
+
+2. In StRoot/JetPicoMaker/StMuJetAnalysisTreeMaker.cxx:
+Add cut for this flag in 'Init()'
+Add trig for this flag in 'Make()' (here probably should just update the code to record all trigger ids available regarding the year)
+Add high tower & jet patch ... trigid in 'AddTriggerInfo()'. Check right 'BarrelHighTowerTh' value and assign 'BarrelHighTowerName'.
+
+3. In StRoot/JetPicoMaker/TStMuCutEventJet.cxx:
+Update the actually cuts which is/will be used in StMuJetAnalysisTreeMaker.cxx
+Use 'SetL0TriggerWord()' to select trigger ids.
+
+
+
+
+
+
