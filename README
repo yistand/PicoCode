@@ -30,7 +30,7 @@ Add high tower & jet patch ... trigid in 'AddTriggerInfo()'. Check right 'Barrel
 3. In StRoot/JetPicoMaker/TStMuCutEventJet.cxx:
 Update the actually cuts which is/will be used in StMuJetAnalysisTreeMaker.cxx
 Use 'SetL0TriggerWord()' to select trigger ids.
-
+Add functions in StRoot/JetPicoMaker/TStMuCutEventJet.h also. 
 
 4. In StRoot/eventStructure/TStarJetPicoEventCuts.cxx
 Update mTrigId for fTrigSel in 'IsTriggerIdOK()'
