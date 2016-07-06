@@ -32,6 +32,9 @@ Update the actually cuts which is/will be used in StMuJetAnalysisTreeMaker.cxx
 Use 'SetL0TriggerWord()' to select trigger ids.
 
 
+4. In StRoot/eventStructure/TStarJetPicoEventCuts.cxx
+Update mTrigId for fTrigSel in 'IsTriggerIdOK()'
+
 
 
 
