@@ -51,7 +51,7 @@ TStarJetPicoTrackCuts::TStarJetPicoTrackCuts(const TStarJetPicoTrackCuts &t)
 // #ly Li Yi 2015.10.19
 Bool_t TStarJetPicoTrackCuts::IsBemcTofMatchedOK(TStarJetPicoPrimaryTrack *tr)
 {
-  return IsTofMatchedOK(tr) && IsBemcMatchedOK(tr);
+  return IsTofMatchedOK(tr) || IsBemcMatchedOK(tr);
 }
 
 
