@@ -61,8 +61,15 @@ TStarJetPicoEventCuts::TStarJetPicoEventCuts(const TStarJetPicoEventCuts &t)
 
 Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
 {
+
   __DEBUG(2, Form("mTrigId = %d TrigSel = %s", mTrigId, fTrigSel.Data()));
   
+  if (fTrigSel.Contains("pythia")||fTrigSel.Contains("mc"))
+  {
+	__DEBUG(2, "Simulation event (pythia or mc) selected");
+	return kTRUE;
+  }
+
   if (fTrigSel.Contains("pp"))
     {
       // include different pp triggers, MB,HT and JP ...
@@ -96,15 +103,33 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
 	  else
 	    if (fTrigSel.Contains("ppJP"))
 	      {
-	    	if (fTrigSel.Contains("ppJP2")) {					// test
-        	       if (mTrigId==370621)		//  JP2				// test
-			{								// test
-			  __DEBUG(2, "JP2 Trigger p+p events run 12 selected");		// test
-			  return kTRUE;							// test
-			}								// test
-			else return kFALSE;						// test
-		}									// test
-		else 									// test
+	    	if (fTrigSel.Contains("ppJP2")) {					
+        	       if (mTrigId==370621)		//  JP2				
+			{								
+			  __DEBUG(2, "JP2 Trigger p+p events run 12 selected");		
+			  return kTRUE;							
+			}								
+			else return kFALSE;						
+		}									
+		else 
+	    	if (fTrigSel.Contains("ppJP1")) {					
+        	       if (mTrigId==370611)		//  JP1			
+			{								
+			  __DEBUG(2, "JP1 Trigger p+p events run 12 selected");		
+			  return kTRUE;							
+			}								
+			else return kFALSE;						
+		}									
+		else 
+	    	if (fTrigSel.Contains("ppJP0")) {					
+        	       if (mTrigId==370601)		//  JP0			
+			{								
+			  __DEBUG(2, "JP0 Trigger p+p events run 12 selected");		
+			  return kTRUE;							
+			}								
+			else return kFALSE;						
+		}									
+		else 									
 		if (mTrigId==117221 || mTrigId==127221 || 
 		    mTrigId==137221 || mTrigId==137222)
 		  {
@@ -155,7 +180,23 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
 	  return kFALSE;
 	}
     } //pp selection
-  
+ 
+  if (fTrigSel.Contains("pAu",TString::kIgnoreCase))
+  {
+        if ( mTrigId==500008 ||mTrigId==500018 ||mTrigId==500201 ||mTrigId==500202 ||mTrigId==500203 ||mTrigId==500204 ||mTrigId==500205 ||mTrigId==500206 ||mTrigId==500213 ||mTrigId==500214 ||mTrigId==500215 ||mTrigId==500401 ||mTrigId==500402 ||mTrigId==500411 ||mTrigId==500412 ||mTrigId==500904)
+//BBCMB, BBCMB, BHT0*VPDMB-5, BHT1*VPDMB-30, BHT0*BBCMB, BHT1*BBCMB, BHT2*BBCMB, BHT1*VPDMB-30_nobsmd, BHT0*BBCMB, BHT1*BBCMB, BHT2*BBCMB, JP2, JP2-bsmd, JP2, JP2-bsmd, VPDMB-30
+        {
+        __DEBUG(2, "Trigger for p+Au 200GeV events run15 selected");
+        return kTRUE;
+        }
+        else
+        {
+          __DEBUG(2, "Reject trigger for p+Au");
+          return kFALSE;
+        }
+  }
+
+ 
   if (fTrigSel.Contains("HT") && !fTrigSel.Contains("pp"))
     {
       if (mTrigId==200620 || mTrigId==200621 || mTrigId==200211 || 
@@ -530,6 +571,7 @@ Bool_t TStarJetPicoEventCuts::IsEventOK(TStarJetPicoEvent *mEv, TChain *fInputTr
 {
   Bool_t retval;
   retval = (IsRefMultOK(mEv) && IsRefCentOK(mEv, fInputTree) && IsVertexZOK(mEv) && IsTriggerIdOK(mEv) && (fFlagPVRankingCut==kFALSE || IsPVRankingOK(mEv)) );
+  //#ly std::cout<< "IsRefMultOK(mEv)=" << IsRefMultOK(mEv) << " IsRefCentOK(mEv, fInputTree) = "<<  IsRefCentOK(mEv, fInputTree) <<  " IsVertexZOK(mEv)=" <<  IsVertexZOK(mEv) << " IsTriggerIdOK(mEv) = " << IsTriggerIdOK(mEv) << " (fFlagPVRankingCut==kFALSE || IsPVRankingOK(mEv) =" <<  IsPVRankingOK(mEv) << std::endl;
   //#ly 16.03.24 maybe not suitable for pp data.      retval = (IsRefMultOK(mEv) && IsRefCentOK(mEv, fInputTree) && IsVertexZOK(mEv) && IsTriggerIdOK(mEv) && (fFlagPVRankingCut==kFALSE || IsPVRankingOK(mEv)) && IsVertexZDiffOK(mEv) );	//#ly new data has VPD information
   
   //#ly 16.03.24 if needed, print out what cuts are applied to the events

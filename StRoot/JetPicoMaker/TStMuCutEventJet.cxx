@@ -88,96 +88,96 @@ void TStMuCutEventJet::Reset()
 //______________________________________________________________________________
 void TStMuCutEventJet::SetStandardCutsCuCuMinBias()
 {   
-  SetL0TriggerWord(66007,66203,99999,99999,99999,99999,99999,99999,99999,99999);  
+  SetL0TriggerWord(66007,66203,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999);  
 }
 
 //______________________________________________________________________________
 void TStMuCutEventJet::SetStandardCutsCuCuHighTwr()
 {   
-  SetL0TriggerWord(66007,66203,99999,99999,99999,99999,99999,99999,99999,99999);  
+  SetL0TriggerWord(66007,66203,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999);  
 }
 
 //______________________________________________________________________________
 void TStMuCutEventJet::SetStandardCutsCuCu62MinBias()
 {   
-  SetL0TriggerWord(76007,76011,99999,99999,99999,99999,99999,99999,99999,99999);  
+  SetL0TriggerWord(76007,76011,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999);  
 }
 
 //______________________________________________________________________________
 void TStMuCutEventJet::SetStandardCutsAuAuCentral()
 {   
-  SetL0TriggerWord(15105,15007,99999,99999,99999,99999,99999,99999,99999,99999);  
+  SetL0TriggerWord(15105,15007,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999);  
 }
 //______________________________________________________________________________
 void TStMuCutEventJet::SetStandardCutsAuAuMinBias()
 {   
-  SetL0TriggerWord(15007,99999,99999,99999,99999,99999,99999,99999,99999,99999);
+  SetL0TriggerWord(15007,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999);
 }
  
 //______________________________________________________________________________
 void TStMuCutEventJet::SetStandardCutsAuAuL2()
 {   //L2 trigger and bht2-mb & mb-vpd
   fAuAuRefCheck=kTRUE;
-  SetL0TriggerWord(200620,200621,200001,200003,200013,200211,200212,200220,200221,200222);
+  SetL0TriggerWord(200620,200621,200001,200003,200013,200211,200212,200220,200221,200222,99999,99999,99999,99999,99999,99999);
 }
  
 //______________________________________________________________________________
 void TStMuCutEventJet::SetStandardCutsAuAuY7Min()
 {
   fAuAuRefCheck=kTRUE;
-  SetL0TriggerWord(200620,200621,200001,200003,200013,200211,200212,200220,200221,200222);
+  SetL0TriggerWord(200620,200621,200001,200003,200013,200211,200212,200220,200221,200222,99999,99999,99999,99999,99999,99999);
  
 }
 
 //______________________________________________________________________________
 void TStMuCutEventJet::SetStandardCutsAuAu62()
 {   
-  SetL0TriggerWord(35001,35004,35006,35007,35008,35009,99999,99999,99999,99999);  
+  SetL0TriggerWord(35001,35004,35006,35007,35008,35009,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999);  
 }
 
 //______________________________________________________________________________
 void TStMuCutEventJet::SetStandardCutsAuAu19()
 {   
-  SetL0TriggerWord(4609,4609,99999,99999,99999,99999,99999,99999,99999,99999);
+  SetL0TriggerWord(4609,4609,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999);
 }
 
 //______________________________________________________________________________
 void TStMuCutEventJet::SetStandardCutsAuAuMBHalfHL04()
 {   
-  SetL0TriggerWord(15006,25001,25007,25105,25203,25211,25310,99999,99999,99999);  
+  SetL0TriggerWord(15006,25001,25007,25105,25203,25211,25310,99999,99999,99999,99999,99999,99999,99999,99999,99999);  
   
 }
 
 //______________________________________________________________________________
 void TStMuCutEventJet::SetStandardCutsPPMinBiasY6()
 {   
-  SetL0TriggerWord(117001,999999,999999,999999,999999,999999,999999,999999,99999,99999);  
+  SetL0TriggerWord(117001,999999,999999,999999,999999,999999,999999,999999,99999,99999,99999,99999,99999,99999,99999,99999);  
   
 }
 //________________________________________________________________________________
 void TStMuCutEventJet::SetStandardCutsPPHTTPY6()
 {   
-  SetL0TriggerWord(117201,999999,999999,999999,999999,999999,999999,999999,99999,99999);  
+  SetL0TriggerWord(117201,999999,999999,999999,999999,999999,999999,999999,99999,99999,99999,99999,99999,99999,99999,99999);  
   
 }
 //______________________________________________________________________________
 
 void TStMuCutEventJet::SetStandardCutsPPHT2Y6()
 {   
-  SetL0TriggerWord(117211,117212,127212,127213,137213,999999,999999,999999,99999,99999);  
+  SetL0TriggerWord(117211,117212,127212,127213,137213,999999,999999,999999,99999,99999,99999,99999,99999,99999,99999,99999);  
   
 }
 
 //______________________________________________________________________________
 void TStMuCutEventJet::SetStandardCutsPPJP1mbY6()
 {   
-  SetL0TriggerWord(117221,127221,137221,137222,999999,999999,9999999,999999,99999,99999);  
+  SetL0TriggerWord(117221,127221,137221,137222,999999,999999,9999999,999999,99999,99999,99999,99999,99999,99999,99999,99999);  
   
 }
 //______________________________________________________________________________
 void TStMuCutEventJet::SetStandardCutsPPallY6()//mb(1) + JP(4) + HT(5)
 {   
-  SetL0TriggerWord(117001,117221,127221,137221,137222,117211,117212,127212,127213,137213);
+  SetL0TriggerWord(117001,117221,127221,137221,137222,117211,117212,127212,127213,137213,99999,99999,99999,99999,99999,99999);
   
 }
 
@@ -185,49 +185,55 @@ void TStMuCutEventJet::SetStandardCutsPPallY6()//mb(1) + JP(4) + HT(5)
 //______________________________________________________________________________
 void TStMuCutEventJet::SetStandardCutsdAuALLY8()
 {   
-  SetL0TriggerWord(210020,210500,210501,210510,210511,210520,210521,210541,999999,999999);  
+  SetL0TriggerWord(210020,210500,210501,210510,210511,210520,210521,210541,999999,999999,99999,99999,99999,99999,99999,99999);  
 }
 
 //______________________________________________________________________________
 void TStMuCutEventJet::SetStandardCutsdAuHTY8()
 {   
-  SetL0TriggerWord(210500,210501,210510,210511,210520,210521,210541,999999,999999,999999);  
+  SetL0TriggerWord(210500,210501,210510,210511,210520,210521,210541,999999,999999,999999,99999,99999,99999,99999,99999,99999);  
 }
 
 //______________________________________________________________________________
 void TStMuCutEventJet::SetStandardCutsMC(){
-  SetL0TriggerWord(0,0,0,0,999999,999999,9999999,999999,99999,99999);  
+  SetL0TriggerWord(0,0,0,0,999999,999999,9999999,999999,99999,99999,99999,99999,99999,99999,99999,99999);  
 
 }
 
 //______________________________________________________________________________ 
 void TStMuCutEventJet::SetStandardCutsPPy8(){
-  SetL0TriggerWord(220500,220510,220520,220000,999999,999999,999999,999999,999999,999999);  
+  SetL0TriggerWord(220500,220510,220520,220000,999999,999999,999999,999999,999999,999999,99999,99999,99999,99999,99999,99999);  
 }
 
 //______________________________________________________________________________
 void TStMuCutEventJet::SetStandardCutsppY12(){
   //2015.10.12 #ly SetL0TriggerWord(370341,370011,370541,370542,370351,370601,370611,370621,99999,99999);  
-  SetL0TriggerWord(370341,370011,370521,370522,370531,370601,370611,370621,99999,99999);  	//  TOFMult4, VPDMB-nobsmd, BHT2*BBCMB, BHT2*BBCMB, BHT2, JP0, JP1, JP2
+  SetL0TriggerWord(370341,370011,370521,370522,370531,370601,370611,370621,99999,99999,99999,99999,99999,99999,99999,99999);  	//  TOFMult4, VPDMB-nobsmd, BHT2*BBCMB, BHT2*BBCMB, BHT2, JP0, JP1, JP2
 
 }
 
 //______________________________________________________________________________
 void TStMuCutEventJet::SetStandardCutsppY12JP2(){
-  SetL0TriggerWord(370621,99999,99999,999999,999999,999999,999999,999999,999999,999999);  	//  JP2
+  SetL0TriggerWord(370621,99999,99999,999999,999999,999999,999999,999999,999999,999999,99999,99999,99999,99999,99999,99999);  	//  JP2
+
+}
+
+//______________________________________________________________________________
+void TStMuCutEventJet::SetStandardCutsppY12JP(){
+  SetL0TriggerWord(370601,370611,370621,999999,999999,999999,999999,999999,999999,999999,99999,99999,99999,99999,99999,99999);  	//  JP0, JP1, JP2
 
 }
 
 //______________________________________________________________________________
 void TStMuCutEventJet::SetStandardCutsppY12MB(){
-  SetL0TriggerWord(370011,99999,99999,999999,999999,999999,999999,999999,999999,999999);  	//  VPDMB-nobsmd
+  SetL0TriggerWord(370011,99999,99999,999999,999999,999999,999999,999999,999999,999999,99999,99999,99999,99999,99999,99999);  	//  VPDMB-nobsmd
 
 }
 
 //______________________________________________________________________________
 void TStMuCutEventJet::SetStandardCutsAuAuY11MB(){
 // vpd-zdc-mb-protected	
-  SetL0TriggerWord(350003,350013,350023,350033,350043,99999,99999,99999,99999,99999);  
+  SetL0TriggerWord(350003,350013,350023,350033,350043,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999);  
 }
 
 //______________________________________________________________________________
@@ -236,7 +242,7 @@ void TStMuCutEventJet::SetStandardCutsAuAuY11HT()
 //	350503,350513 for NPE18
 //	350504,350514 for NPE25
 //  SetL0TriggerWord(350502,350512,350503,350513,350504,350514,99999,99999,99999,99999);	// NPE15, NPE18, NPE25
-  SetL0TriggerWord(350503,350513,99999,99999,99999,99999,99999,99999,99999,99999);	// NPE18
+  SetL0TriggerWord(350503,350513,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999);	// NPE18
 //  SetL0TriggerWord(350504,350514,99999,99999,99999,99999,99999,99999,99999,99999);	// NPE25
 }
  
@@ -244,9 +250,15 @@ void TStMuCutEventJet::SetStandardCutsAuAuY11HT()
 void TStMuCutEventJet::SetStandardCutsAuAuY11L2()
 {   //L2 trigger
 // #ly not sure what is it, therefore commented out.   fAuAuRefCheck=kTRUE;
-  SetL0TriggerWord(20,350069,99999,99999,99999,99999,99999,99999,99999,99999);
+  SetL0TriggerWord(20,350069,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999,99999);
 }
  
+//______________________________________________________________________________
+void TStMuCutEventJet::SetStandardCutspAuY15(){
+  SetL0TriggerWord(500008, 500018, 500201, 500202, 500203, 500204, 500205, 500206, 500213, 500214, 500215, 500401, 500402, 500411, 500412, 500904 );  	// BBCMB, BBCMB, BHT0*VPDMB-5, BHT1*VPDMB-30, BHT0*BBCMB, BHT1*BBCMB, BHT2*BBCMB, BHT1*VPDMB-30_nobsmd, BHT0*BBCMB, BHT1*BBCMB, BHT2*BBCMB, JP2, JP2-bsmd, JP2, JP2-bsmd, VPDMB-30
+
+}
+
 
 //______________________________________________________________________________
  Int_t TStMuCutEventJet::CheckEvent(StMuEvent *Event)
@@ -270,7 +282,13 @@ void TStMuCutEventJet::SetStandardCutsAuAuY11L2()
 			    Event->triggerIdCollection().nominal().isTrigger(fL0TriggerWord7) ==0 && 
 			    Event->triggerIdCollection().nominal().isTrigger(fL0TriggerWord8) ==0 && 
 			    Event->triggerIdCollection().nominal().isTrigger(fL0TriggerWord9) ==0 && 
-			    Event->triggerIdCollection().nominal().isTrigger(fL0TriggerWord10) ==0  
+			    Event->triggerIdCollection().nominal().isTrigger(fL0TriggerWord10) ==0  &&
+			    Event->triggerIdCollection().nominal().isTrigger(fL0TriggerWord11) ==0  &&
+			    Event->triggerIdCollection().nominal().isTrigger(fL0TriggerWord12) ==0  &&
+			    Event->triggerIdCollection().nominal().isTrigger(fL0TriggerWord13) ==0  &&
+			    Event->triggerIdCollection().nominal().isTrigger(fL0TriggerWord14) ==0  &&
+			    Event->triggerIdCollection().nominal().isTrigger(fL0TriggerWord15) ==0  &&
+			    Event->triggerIdCollection().nominal().isTrigger(fL0TriggerWord16) ==0 
 			    ))
     {
       if(fVerbose) printf("Event not accepted L0TriggerWord ");
@@ -368,7 +386,7 @@ void TStMuCutEventJet::StatisticForParticle(StMuEvent *Event)
 
   if(fFlagL0TriggerWord)
     {   
-      sprintf(hname,"SetL0TriggerWord(%d,%d,%d,%d,%d,%d,%d,%d,%d,%d) : %d all: %d ",fL0TriggerWord,fL0TriggerWord2,fL0TriggerWord3,fL0TriggerWord4,fL0TriggerWord5,fL0TriggerWord6,fL0TriggerWord7,fL0TriggerWord8,fL0TriggerWord9,fL0TriggerWord10,fnL0TriggerWord,fnallL0TriggerWord);
+      sprintf(hname,"SetL0TriggerWord(%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d) : %d all: %d ",fL0TriggerWord,fL0TriggerWord2,fL0TriggerWord3,fL0TriggerWord4,fL0TriggerWord5,fL0TriggerWord6,fL0TriggerWord7,fL0TriggerWord8,fL0TriggerWord9,fL0TriggerWord10,fL0TriggerWord11,fL0TriggerWord12,fL0TriggerWord13,fL0TriggerWord14,fL0TriggerWord15,fL0TriggerWord16,fnL0TriggerWord,fnallL0TriggerWord);
       pave->AddText(hname);
     } 
 

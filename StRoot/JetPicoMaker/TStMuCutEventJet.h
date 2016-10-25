@@ -58,15 +58,15 @@ class TStMuCutEventJet : public TObject
   void      SetStandardCutsAuAu39();
 
   void	    SetStandardCutsppY12();
-
   void	    SetStandardCutsppY12JP2();
-
+  void	    SetStandardCutsppY12JP();
   void	    SetStandardCutsppY12MB();
 
   void	    SetStandardCutsAuAuY11MB();
-
   void      SetStandardCutsAuAuY11HT();
   void      SetStandardCutsAuAuY11L2();
+  
+  void	    SetStandardCutspAuY15();
 
   Int_t     CheckEvent(StMuEvent *Event); 
 
@@ -96,12 +96,15 @@ class TStMuCutEventJet : public TObject
   void      SetMult(Int_t x, Int_t y)            { fFlagMult = kTRUE; 
   fMinMult = x; 
   fMaxMult = y; }
-  void      SetL0TriggerWord(UInt_t x,UInt_t y=0,UInt_t z=0,UInt_t w=0,UInt_t q=0,UInt_t r=0,UInt_t l=0,UInt_t k=0,UInt_t m=0,UInt_t n=0) { fFlagL0TriggerWord= kTRUE; 
+  void      SetL0TriggerWord(UInt_t x,UInt_t y=0,UInt_t z=0,UInt_t w=0,UInt_t q=0,UInt_t r=0,UInt_t l=0,UInt_t k=0,UInt_t m=0,UInt_t n=0, UInt_t s=0, UInt_t t=0, UInt_t u=0, UInt_t v=0, UInt_t a=0, UInt_t b=0) { fFlagL0TriggerWord= kTRUE; 
   fL0TriggerWord = x; fL0TriggerWord2= y;
   fL0TriggerWord3 = z; fL0TriggerWord4= w; 
   fL0TriggerWord5 = q; fL0TriggerWord6= r; 
   fL0TriggerWord7 = l; fL0TriggerWord8= k;
   fL0TriggerWord9 = m; fL0TriggerWord10= n;
+  fL0TriggerWord11= s; fL0TriggerWord12= t;
+  fL0TriggerWord13= u; fL0TriggerWord14= v;
+  fL0TriggerWord15= a; fL0TriggerWord16= b;
 
 }
   void      SetVertexIflagCutOff()               { fFlagVertexIflag = kFALSE; }
@@ -176,8 +179,13 @@ class TStMuCutEventJet : public TObject
   UInt_t      fL0TriggerWord7;               //  triggerword
   UInt_t      fL0TriggerWord8;               //  triggerword 
   UInt_t      fL0TriggerWord9;               //  triggerword
-  UInt_t      fL0TriggerWord10;              
-//  triggerword
+  UInt_t      fL0TriggerWord10;              //  triggerword
+  UInt_t      fL0TriggerWord11;              //  triggerword
+  UInt_t      fL0TriggerWord12;              //  triggerword
+  UInt_t      fL0TriggerWord13;              //  triggerword
+  UInt_t      fL0TriggerWord14;              //  triggerword
+  UInt_t      fL0TriggerWord15;              //  triggerword
+  UInt_t      fL0TriggerWord16;              //  triggerword
 
   ClassDef(TStMuCutEventJet,3)                    //  Event cuts
 

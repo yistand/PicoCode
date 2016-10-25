@@ -242,9 +242,10 @@ Int_t StMuJetAnalysisTreeMaker::Init()
 	if(nflagData==8){
 
 		//PP Y12 200 GeV
-		//#ly test fTCutEvent->SetStandardCutsppY12(); 		
-		//fTCutEvent->SetStandardCutsppY12JP2();		// #ly test
-		fTCutEvent->SetStandardCutsppY12MB();		// #ly test
+		//fTCutEvent->SetStandardCutsppY12(); 		
+		fTCutEvent->SetStandardCutsppY12JP(); 			// JP0, JP2, JP2
+		//fTCutEvent->SetStandardCutsppY12JP2();		// JP2 
+		//fTCutEvent->SetStandardCutsppY12MB();			// vpd-nosmd MB 
 		fTCutEvent->SetMult(0,7000);
 		fTCutEvent->SetVertexZ(-50,50);
 	}
@@ -269,6 +270,13 @@ Int_t StMuJetAnalysisTreeMaker::Init()
 		fTCutEvent->SetStandardCutsAuAuY11MB();
 		fTCutEvent->SetMult(0,7000);
 		fTCutEvent->SetVertexZ(-30,30);
+	}
+
+	if(nflagData==12){
+		//pAu Y15 200 GeV 
+		fTCutEvent->SetStandardCutspAuY15();
+		fTCutEvent->SetMult(0,7000);
+		fTCutEvent->SetVertexZ(-50,50);
 	}
 
 	if (FillAllPV) { // cuts on vertex won't be done by event cut!
@@ -564,6 +572,16 @@ Int_t StMuJetAnalysisTreeMaker::Make()
 
 	}
 
+	if(nflagData==12){
+		if(mVerbose) cout<<"p+Au run15 200 GeV set HT JP MB"<<endl;
+		vector<unsigned int> triggerIds = muEvent->triggerIdCollection().nominal().triggerIds();
+		for(int itrgid = 0; itrgid < triggerIds.size(); itrgid++) {
+			MEvent->GetHeader()->AddTriggerId(triggerIds.at(itrgid));
+		}
+
+	}
+
+
 	Bfield  = 0.1*muEvent->runInfo().magneticField(); //this is in tesla,ie 0.1*kilogauss
 	// cout<<"     ***** B Field = "<<Bfield<<endl;
 	StEventSummary &eventsum = muEvent->eventSummary();
@@ -814,14 +832,31 @@ void StMuJetAnalysisTreeMaker::AddTriggerInfo(StTriggerSimuMaker *simuTrig){
 		indHT=5;//index of last HT trigger id in the trId array
 	}
 
+	if(nflagData==12){//pAu Y15
+		trId[0]=500202;	//BHT1*VPDMB-30
+		trId[1]=500204;	//BHT1*BBCMB
+		trId[2]=500205;	//BHT2*BBCMB
+		trId[3]=500206;	//BHT1*VPDMB-30_nobsmd
+		trId[4]=500214;	//BHT1*BBCMB
+		trId[5]=500215;	//BHT2*BBCMB
+		trId[6]=500401;	//JP2
+		trId[7]=500402;	//JP2-bsmd
+		trId[8]=500411;	//JP2
+		trId[9]=500412;	//JP2-bsmd
+
+		nTrIds=10;//n. of elem in trId array
+		indHT=5;//index of last HT trigger id in the trId array
+	}
+
 	Int_t doneBBC=0;		//#ly note: the flag to clear trigobj for the new trigger id
 	for(Int_t id=0;id<nTrIds;id++){
 		Int_t trigId=l1trig.isTrigger(trId[id]);
 		if (mVerbose) cout<<trId[id]<<" l1trig.isTrigger = "<<trigId<<endl;
 		StTriggerSimuResult trigResult = simuTrig->detailedResult(trId[id]);
 		Float_t etaTow,phiTow;
-		if (mVerbose) cout<<"simuTrig.isTrig = "<<simuTrig->isTrigger(trId[id])<<" BEMC="<<simuTrig->bemc->triggerDecision(trId[id])<<" "<<"trigResult.bemcDecision()= "<<trigResult.bemcDecision()<<endl;
-		if (trigResult.bbcDecision()==1 && doneBBC==0){		// #ly note: each trigger id obj is separated by this (content 0 & flag 5) entry
+		if (mVerbose) cout<<"simuTrig.isTrig = "<<simuTrig->isTrigger(trId[id])<<" BEMC="<<simuTrig->bemc->triggerDecision(trId[id])<<" "<<"trigResult.bemcDecision()= "<<trigResult.bemcDecision()<<" trigResult.bbcDecision()="<<trigResult.bbcDecision()<<endl;
+		//2016.08.03 #ly bbc is not in used for JP trigger since run9 if (trigResult.bbcDecision()==1 && doneBBC==0){		// #ly note: each trigger id obj is separated by this (content 0 & flag 5) entry
+		if (doneBBC==0){		// #ly note: each trigger id obj is separated by this (content 0 & flag 5) entry 	#2016.08.03 #ly bbc is not in used for JP trigger since run9  
 			doneBBC=1;
 			trigobj.Clear();
 			trigobj.SetEta(0);
@@ -835,15 +870,22 @@ void StMuJetAnalysisTreeMaker::AddTriggerInfo(StTriggerSimuMaker *simuTrig){
 		// #ly  function trigResult.highTowerIds() is not updated in STAR simu maker. We need to manually set the bemc trigger adc threshold and figure out the tower id
 		int BarrelHighTowerTh = 0;		//#ly
 		int BarrelHighTowerName = 0;	//#ly
-		if(nflagData==10 && (trId[id]==350502 || trId[id]==350512)) {BarrelHighTowerTh = 1;BarrelHighTowerName=115;}	//#ly NPE15
-		if(nflagData==10 && (trId[id]==350503 || trId[id]==350513)) {BarrelHighTowerTh = 2;BarrelHighTowerName=118;}	//#ly NPE18
-		if(nflagData==10 && (trId[id]==350504 || trId[id]==350514)) {BarrelHighTowerTh = 3;BarrelHighTowerName=125;}	//#ly NPE25
+		if(nflagData==10 && (trId[id]==350502 || trId[id]==350512)) {BarrelHighTowerTh = 1;BarrelHighTowerName=115;}	//#ly NPE15	Y11 AuAu200
+		if(nflagData==10 && (trId[id]==350503 || trId[id]==350513)) {BarrelHighTowerTh = 2;BarrelHighTowerName=118;}	//#ly NPE18	Y11 AuAu200
+		if(nflagData==10 && (trId[id]==350504 || trId[id]==350514)) {BarrelHighTowerTh = 3;BarrelHighTowerName=125;}	//#ly NPE25	Y11 AuAu200
 
-		if(nflagData==8 && (trId[id]==370521 || trId[id]==370522)) {BarrelHighTowerTh = 2;BarrelHighTowerName=1218;}	//#ly 	BHT2*BBCMB
-		if(nflagData==8 && trId[id]==370531 ) {BarrelHighTowerTh = 2;BarrelHighTowerName=1218;}	//#ly  BHT2
+		if(nflagData==8 && (trId[id]==370521 || trId[id]==370522)) {BarrelHighTowerTh = 2;BarrelHighTowerName=1218;}	//#ly 	BHT2*BBCMB	Y12 pp200
+		if(nflagData==8 && trId[id]==370531 ) {BarrelHighTowerTh = 2;BarrelHighTowerName=1218;}	//#ly  BHT2		Y12 pp200
+
+		if(nflagData==12 && (trId[id]==500202 || trId[id]==500204 || trId[id]==500206 || trId[id]==500214) ) {BarrelHighTowerTh = 1;BarrelHighTowerName=1511;}	//#ly  500202: BHT1*VPDMB-30;  500204: BHT1*BBCMB; 500206: BHT1*VPDMB-30_nobsmd;  500214:BHT1*BBCMB		Y15 pAu200
+		if(nflagData==12 && (trId[id]==500205 || trId[id]==500215)) {BarrelHighTowerTh = 2;BarrelHighTowerName=1518;}	//#ly 	500205: BHT2*BBCMB; 	500215: BHT2*BBCMB	Y15 pAu200
 
 		// #ly note StTriggerUtilities/StVirtualTriggerSimu.h : enum StTriggerSimuDecision { kNo, kYes, kDoNotCare };
-		if ( id<=indHT && (nflagData==10 || nflagData==8) && simuTrig->isTrigger(trId[id]) && trigResult.bbcDecision() == 1) {	// #ly the previous method of trigResult.bemcDecision() is not used in run 11 for simumaker
+		if (( id<=indHT && nflagData==10 && simuTrig->isTrigger(trId[id]) && trigResult.bbcDecision() == 1) 	// #ly the previous method of trigResult.bemcDecision() is not used in run 11 for simumaker
+		|| ( id<=indHT && nflagData==8 && simuTrig->isTrigger(trId[id]) && (((trId[id]==370521 || trId[id]==370522) && (trigResult.bbcDecision() == 1) ) || (trId[id]==370531) ))	
+	    // #ly Y12 pp200 370521 370522 are BHT2*BBCMB, 370531 is BHT2 (no bbc)
+		|| ( id<=indHT && nflagData==12 && simuTrig->isTrigger(trId[id]) && (((trId[id]==500204 || trId[id]==500205 || trId[id]==500214 || trId[id]==500215) && (trigResult.bbcDecision() == 1) ) || (trId[id]==500202 || trId[id]==500206) ))) {	
+	    // #ly Y15 pAu200 500204:BHT1*BBCMB; 500205: BHT2*BBCMB; 500214: BHT1*BBCMB; 500215: BHT2*BBCMB; 500202: BHT1*VPDMB-30; 500206: BHT1*VPDMB-30_nobsmd 
 			vector<short> towerId;
 			for(int itwd = 1; itwd<=4800; itwd++) { 		// loop over simumaker to figure out which tower is fired.
 				if((simuTrig->bemc->getHT6bitAdc(itwd))>(simuTrig->bemc->barrelHighTowerTh(BarrelHighTowerTh))) {	// #ly the simu maker functions highTowerIds & highTowerAdcs are not updated. we have to manually set the high tower level, compare and get the result
@@ -873,12 +915,16 @@ void StMuJetAnalysisTreeMaker::AddTriggerInfo(StTriggerSimuMaker *simuTrig){
 		int JetPatchTh = 0;		//#ly
 		int JetPatchName = 0;	//#ly
 
-		if(nflagData==8 && trId[id]==370601 ) {JetPatchTh = 0;JetPatchName=1220;}	//#ly JP0
-		if(nflagData==8 && trId[id]==370611 ) {JetPatchTh = 1;JetPatchName=1228;}	//#ly JP1
-		if(nflagData==8 && trId[id]==370621 ) {JetPatchTh = 2;JetPatchName=1236;}	//#ly JP2
+		if(nflagData==8 && trId[id]==370601 ) {JetPatchTh = 0;JetPatchName=1220;}	//#ly JP0 pp200 Y12
+		if(nflagData==8 && trId[id]==370611 ) {JetPatchTh = 1;JetPatchName=1228;}	//#ly JP1 pp200 Y12
+		if(nflagData==8 && trId[id]==370621 ) {JetPatchTh = 2;JetPatchName=1236;}	//#ly JP2 pp200 Y12
+
+		if(nflagData==12 && (trId[id]==500401 || trId[id]==500402 || trId[id]==500411 || trId[id]==500412) ) {JetPatchTh = 2;JetPatchName=1540;}	//#ly JP2 pAu200 Y15
+		//#ly for pAu200 Y15 JP2: East 500, Mid 42, West 40 for 500411 && 500412; East 500, Mid 40, West 39 for 500401 && 500402
 
 
-		if ( id>indHT && (nflagData==10 || nflagData==8) && simuTrig->isTrigger(trId[id]) && trigResult.bbcDecision() == 1) {	// #ly the previous method of trigResult.bemcDecision() is not used in run 11 for simumaker
+		//2016.08.03 #ly bbc is not in use for JP pp since run9 if ( id>indHT && (nflagData==10 || nflagData==8) && simuTrig->isTrigger(trId[id]) && trigResult.bbcDecision() == 1) {	// #ly the previous method of trigResult.bemcDecision() is not used in run 11 for simumaker
+		if ( id>indHT && (nflagData==10 || nflagData==8 || nflagData==12) && simuTrig->isTrigger(trId[id]) ) {	// #ly the previous method of trigResult.bemcDecision() is not used in run 11 for simumaker	// 2016.08.03	#ly bbc is not in use for JP pp since run9  
 			vector<short> patchId;
 			for(int jp = 0; jp<18; jp++) {		// #ly jet patch size is 1*1, contains 20*20 = 400 towers, R=0.5. here are 6 overlapping jet patches, so it's 12+6=18, overlapping jet patches are from -0.6 to 0.4 in eta and 2pi in phi. 
 				if(simuTrig->bemc->barrelJetPatchAdc(jp) > simuTrig->bemc->barrelJetPatchTh(JetPatchTh)) {

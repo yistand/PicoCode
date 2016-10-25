@@ -5,43 +5,36 @@
  <command>
  	ls -l -a
 	starver pro
-	root4star -q -b bemcCalibMacro.C\(1e7,\"$FILELIST\",\"$JOBID\",$INPUTFILECOUNT\)
+	root4star -q -b Macro.C\(1e7,\"$FILELIST\",\"$JOBID\",$INPUTFILECOUNT\)
  </command>
 
 
  <SandBox installer="ZIP">
-	 <Package name="pp12Pico">
-                <File>file:/star/u/yili/pwg/run12pp/PicoDstppProduction/bemcCalibMacro.C</File>
-                <File>file:/star/u/yili/pwg/run12pp/PicoDstppProduction/libTStarJetPico.so</File>
-                <File>file:/star/u/yili/pwg/run12pp/PicoDstppProduction/JetPicoMaker.so</File>
+	 <Package name="pAu15Pico">
+                <File>file:/star/u/yili/pwg/run15pAu/PicoDstProduction/Macro.C</File>
+                <File>file:/star/u/yili/pwg/run15pAu/PicoDstProduction/libTStarJetPico.so</File>
+                <File>file:/star/u/yili/pwg/run15pAu/PicoDstProduction/JetPicoMaker.so</File>
          </Package>
  </SandBox>
 
-	<stdout URL="file:/star/u/yili/pwg/run12pp/PicoDstppProduction/submit/log/$JOBID.log" />
-	<stderr URL="file:/star/u/yili/pwg/run12pp/PicoDstppProduction/submit/err/$JOBID.err" />
+	<stdout URL="file:/star/u/yili/pwg/run15pAu/PicoDstProduction/submit/log/$JOBID.log" />
+	<stderr URL="file:/star/u/yili/pwg/run15pAu/PicoDstProduction/submit/err/$JOBID.err" />
 
         <Generator>
-                <Location>/star/u/yili/pwg/run12pp/PicoDstppProduction/submit/report</Location>
-                <ScriptLocation>/star/u/yili/pwg/run12pp/PicoDstppProduction/submit/csh/</ScriptLocation>
-                <ListLocation>/star/u/yili/pwg/run12pp/PicoDstppProduction/submit/list/</ListLocation>
+                <Location>/star/u/yili/pwg/run15pAu/PicoDstProduction/submit/report</Location>
+                <ScriptLocation>/star/u/yili/pwg/run15pAu/PicoDstProduction/submit/csh/</ScriptLocation>
+                <ListLocation>/star/u/yili/pwg/run15pAu/PicoDstProduction/submit/list/</ListLocation>
         </Generator>
 
-	<!--
-	<input singleCopy="true" preferStorage="local" URL="catalog:star.bnl.gov?filetype=daq_reco_MuDst,events!=0,trgsetupname=pp200_production_2012,filename~st_physics,production=P13ib,storage!=hpss,sanity=1" nFiles="all" />
-	<input singleCopy="true" preferStorage="local" URL="catalog:star.bnl.gov?filetype=daq_reco_MuDst,events!=0,trgsetupname=pp200_production_2012,filename~st_physics,production=P13ib,storage!=hpss,sanity=1,runnumber[]13044101-13075024" nFiles="all" />
-	-->
-	<input singleCopy="true" preferStorage="local" URL="catalog:star.bnl.gov?filetype=daq_reco_MuDst,events!=0,trgsetupname=pp200_production_2012,filename~st_physics,production=P12id,storage!=hpss,sanity=1" nFiles="all" />
+	<input singleCopy="true" preferStorage="local" URL="catalog:star.bnl.gov?filetype=daq_reco_MuDst,events!=0,trgsetupname=production_pAu200_2015,filename~st_physics,production=P16id,storage!=hpss,sanity=1" nFiles="all" />
 
 
 <command>
 echo Current Location is: 
 pwd
 ls -r -t -r
-<!--
-cp  $SCRATCH/pp12Pico_$JOBID.root /star/u/yili/pwg/run12pp/PicoDstppProduction/out
-scp $SCRATCH/pp12Pico_$JOBID.root  ly247@wright.physics.yale.edu:/home/ly247/data/pp200Y12picoJP2_151030/
--->
-scp $SCRATCH/*.root  ly247@wright.physics.yale.edu:/projects/rhig/ly247/stardata/pp200Y12picoMB_151207/
+echo scp $SCRATCH/*.root  ly247@wright.physics.yale.edu:/home/ly247/data/STARdata/pAu200Y15pico_161022/
+scp $SCRATCH/*.root  ly247@wright.physics.yale.edu:/home/ly247/data/STARdata/pAu200Y15pico_161022/
 rm  $SCRATCH/*.root
 </command>
 

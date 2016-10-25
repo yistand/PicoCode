@@ -50,7 +50,7 @@ TStarJetPicoTowerCuts::TStarJetPicoTowerCuts(const TStarJetPicoTowerCuts &t)
 Bool_t TStarJetPicoTowerCuts::IsTowerOK( Int_t mTowId ){
   if ( badTowers.size()==0 ){
     __ERROR("TStarJetPicoTowerCuts::IsTowerOK: WARNING: You're trying to run without a bad tower list. If you know what you're doing, deactivate this throw and recompile.");
-    throw ( -1 );
+    //#ly 2016.07.30	throw ( -1 );
   }
   if ( badTowers.count( mTowId )>0 ){
     __DEBUG(9, Form("Reject. Tower ID: %d", mTowId));
