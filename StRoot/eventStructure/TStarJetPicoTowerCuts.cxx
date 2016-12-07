@@ -29,8 +29,7 @@ ClassImp(TStarJetPicoTowerCuts)
 TStarJetPicoTowerCuts::TStarJetPicoTowerCuts()
   : TObject()
   , fMaxEt(1000.)// by default, no cut effectively
-  , fMaxPhi(0.0)
-  , fMinPhi(0.0)
+  , restrictedPhiRanges()
   , y8PythiaCut(kFALSE)
 {
   __DEBUG(2, "Creating tower cuts with default values.");
@@ -39,8 +38,7 @@ TStarJetPicoTowerCuts::TStarJetPicoTowerCuts()
 TStarJetPicoTowerCuts::TStarJetPicoTowerCuts(const TStarJetPicoTowerCuts &t)
   : TObject(t)
   , fMaxEt(t.fMaxEt)
-  , fMaxPhi(t.fMaxPhi)
-  , fMinPhi(t.fMinPhi)
+  , restrictedPhiRanges(t.restrictedPhiRanges)
   , y8PythiaCut(t.y8PythiaCut)
 {
   __DEBUG(2, "Copy tower cuts.");  
@@ -50,7 +48,7 @@ TStarJetPicoTowerCuts::TStarJetPicoTowerCuts(const TStarJetPicoTowerCuts &t)
 Bool_t TStarJetPicoTowerCuts::IsTowerOK( Int_t mTowId ){
   if ( badTowers.size()==0 ){
     __ERROR("TStarJetPicoTowerCuts::IsTowerOK: WARNING: You're trying to run without a bad tower list. If you know what you're doing, deactivate this throw and recompile.");
-    //#ly 2016.07.30	throw ( -1 );
+    throw ( -1 );
   }
   if ( badTowers.count( mTowId )>0 ){
     __DEBUG(9, Form("Reject. Tower ID: %d", mTowId));
@@ -196,9 +194,18 @@ Bool_t TStarJetPicoTowerCuts::IsTowerOK(TStarJetPicoTower *tw, TStarJetPicoEvent
     retval = kFALSE;
   }
 
-  
-  // TODO: Move phi cuts here
-  // ------------------------
+  Double_t phi = tw->GetPhi();
+  Double_t min, max;
+  for (unsigned i = 0; i < restrictedPhiRanges.size(); ++i) {
+    min = restrictedPhiRanges[i][0];
+    max = restrictedPhiRanges[i][1];
+    if ( phi >= min && phi <= max ) {
+        __DEBUG(9, Form("Reject. %f < %f < %f", min, phi, max) );
+        retval = kFALSE;
+    }
+    else
+        __DEBUG(9, Form("Accept. ! %f < %f < %f", min, phi, max) );
+  }
 
   
   return retval;
@@ -288,21 +295,70 @@ Double_t TStarJetPicoTowerCuts::HadronicCorrection(TStarJetPicoTower *mTower,
   return Ecorr;
 }
 
-Bool_t TStarJetPicoTowerCuts::SetPhiCut(Double_t min, Double_t max)
+Bool_t TStarJetPicoTowerCuts::RestrictPhiRange(Double_t min, Double_t max)
 {
-    Bool_t retval = kTRUE;
-    if ( min > TMath::Pi() || min < (-1.0)*TMath::Pi() ) {
-      __ERROR("Phi minimum cut out of bounds [-Pi,Pi]. Using Defaults.");
-      retval = kFALSE;
-    }
-
-    if ( max > TMath::Pi() || max < (-1.0)*TMath::Pi() ) {
-        __ERROR("Phi maximum cut out of bounds [-Pi,Pi]. Using Defaults.");
-        retval = kFALSE;
-    }
-    if (!retval)  return kFALSE;
+    // nick elsey: mapping any phi region defined on [-pi, pi], or [0, 2*pi]
+    // onto a linear sequence of regions that can be used by IsTowerOK()
+    // returns false if the input is defined on [-2*pi, 0], etc
     
-    fMinPhi = min;
-    fMaxPhi = max;
+    double pi = TMath::Pi();
+    //for pairs defined on [-pi, pi]
+    if ( min >= -pi && min < pi && max <= pi && max > -pi ) {
+        if ( min < max ) {
+            AddPhiCut( min, max );
+            return kTRUE;
+        }
+        else if ( min > max ) {
+            AddPhiCut( -pi, max );
+            AddPhiCut( min, pi );
+            return kTRUE;
+        }
+        else {
+            __ERROR( Form("Error: phiMin is equal to phiMax: ambiguous.") );
+            return kFALSE;
+        }
+    }
+    else if (min >= 0.0 && min < 2.0*pi && max > 0.0 && max <= 2.0*pi ) {
+        if ( min <= pi && max > pi ) {
+            AddPhiCut( -pi, max - 2.0*pi );
+            AddPhiCut( min, pi );
+            return kTRUE;
+        }
+        else if ( min > pi && max <= pi ) {
+            AddPhiCut( min - 2.0*pi, max );
+            return kTRUE;
+        }
+        else if (min >= pi && max >= pi ) {
+            if ( min > max ) {
+                AddPhiCut( min - 2.0*pi, pi );
+                AddPhiCut( -pi, max - 2.0*pi );
+                return kTRUE;
+            }
+            else if ( min < max ) {
+                AddPhiCut( min - 2.0*pi, max - 2.0*pi );
+                return kTRUE;
+            }
+        }
+        else {
+            __ERROR(Form("Error: Couldn't convert phiMin and PhiMax.") );
+            return kFALSE;
+        }
+    }
+    else {
+        __ERROR( Form("Error: Unrecognized Phi definition.") );
+        return kFALSE;
+    }
+    return kFALSE;
+}
+
+Bool_t TStarJetPicoTowerCuts::AddPhiCut(Double_t min, Double_t max) {
+    if (!(min >= -TMath::Pi() && min <= TMath::Pi() && max >= -TMath::Pi() && max <= TMath::Pi() )){
+        __ERROR("internal conversion error, apologies");
+        return kFALSE;
+    }
+    std::vector<double> temp;
+    temp.push_back( min );
+    temp.push_back( max );
+    restrictedPhiRanges.push_back( temp );
     return kTRUE;
 }

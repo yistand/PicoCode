@@ -1,6 +1,7 @@
 #include "TStarJetPicoReaderBase.h"
 
 #include <TChain.h>
+#include <TFile.h>
 #include <TList.h>
 #include <TStopwatch.h>
 
@@ -44,6 +45,8 @@ TStarJetPicoReaderBase::TStarJetPicoReaderBase()
   , fSelectedTowers(new TList)
   , fSelectedV0s(new TList)
   , fProcessV0s(kFALSE)
+  , fProcessTowers(kTRUE)
+  , fUseRejectAnyway(kFALSE)
   , fNEntryStatus(0)
   , fLastRealTime(0)
   , fStopwatch(0)
@@ -201,13 +204,20 @@ Bool_t TStarJetPicoReaderBase::ProcessEvent()
       return kFALSE;
     }
 
-  if ( LoadTowers() == kFALSE )
+  if (fProcessTowers)
     {
-      __DEBUG(2, Form("Event not accepted. Failed on LoadTowers."));
-      return kFALSE;
+      if ( LoadTowers() == kFALSE )
+	{
+	  __DEBUG(2, Form("Event not accepted. Failed on LoadTowers."));
+	  return kFALSE;
+	}
     }
 
-
+  if ( fUseRejectAnyway &&  RejectAnyway() ){
+    __DEBUG(0, Form("Event not accepted. Failed on RejectAnyway()."));
+    return kFALSE;
+  }
+  
   __DEBUG(2, Form("Current event %lld accepted.", fNEntryLoaded));
 
   return kTRUE;
@@ -429,4 +439,38 @@ void TStarJetPicoReaderBase::PrintEventInfo()
 
   __INFO("Event info... (calling the utils)");
   TStarJetPicoUtils::PrintPicoReaderInfo(this);
+}
+// ======================================================
+// Added by KK to allow customized rejection for some
+// very specific cases
+// Original goal was one specific event in Run6 Geant
+// with an absurdly high pT track (20 GeV for pThat=4-5)
+Bool_t TStarJetPicoReaderBase::RejectAnyway()
+{
+  // For Run6 Geant. Reject absurdly high pT track (20 GeV for pThat=4-5) event
+  // This is a truly dumb method relying on naming schemes.
+  // That data is a pain. Very hard to uniquely identify an event
+  // So use it carefully!
+  TFile *CurrentFile = fInputTree->GetCurrentFile();
+  if ( TString(CurrentFile->GetName()).Contains( "picoDst_4_5" )
+       &&  (
+	    ( TString(fInputTree->GetName()) == "JetTreeMc"
+	      && fEvent->GetHeader()->GetRunId() == 0 && fEvent->GetHeader()->GetEventId() == 434
+	      && fEvent->GetHeader()->GetReferenceMultiplicity() == 31
+	      && fEvent->GetHeader()->GetNGlobalTracks() == 38
+	      && fabs( fEvent->GetHeader()->GetPrimaryVertexZ()- 52.65) < 1e-1
+	      ) ||
+	    ( TString(fInputTree->GetName()) == "JetTree"
+	      && fEvent->GetHeader()->GetRunId() == 256 && fEvent->GetHeader()->GetEventId() == 434
+	      && fEvent->GetHeader()->GetReferenceMultiplicity() == 2
+	      && fEvent->GetHeader()->GetNGlobalTracks() == 16
+	      && fabs( fEvent->GetHeader()->GetPrimaryVertexZ()- 52.75) < 1e-1
+	      )
+	    )
+       ) {
+    std::cout << fInputTree->GetName() << "  " << fEvent->GetHeader()->GetRunId() << "  " << fEvent->GetHeader()->GetEventId() << std::endl;
+    return true;
+  }
+  
+  return false;
 }

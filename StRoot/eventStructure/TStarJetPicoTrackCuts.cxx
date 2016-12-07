@@ -24,8 +24,7 @@ TStarJetPicoTrackCuts::TStarJetPicoTrackCuts()
   , fMinNfit(20)
   , fFitOverMax(0.52)
   , fMaxPt(1000.) // by default, no cut effectively
-  , fMinPhi(0.0)
-  , fMaxPhi(0.0)
+  , restrictedPhiRanges()
   , fMaxChi2(1000.) // no cut effectively
   , fPCT(kFALSE)
   , fFlagMaxChi2(kFALSE)
@@ -39,8 +38,7 @@ TStarJetPicoTrackCuts::TStarJetPicoTrackCuts(const TStarJetPicoTrackCuts &t)
   , fMinNfit(t.fMinNfit)
   , fFitOverMax(t.fFitOverMax)
   , fMaxPt(t.fMaxPt)
-  , fMinPhi(t.fMinPhi)
-  , fMaxPhi(t.fMaxPhi)
+  , restrictedPhiRanges(t.restrictedPhiRanges)
   , fMaxChi2(t.fMaxChi2)
   , fPCT(t.fPCT)
   , fFlagMaxChi2(t.fFlagMaxChi2)
@@ -171,9 +169,24 @@ Bool_t  TStarJetPicoTrackCuts::IsPCTOK(TStarJetPicoPrimaryTrack *tr) {
   }
 }
 
+Bool_t TStarJetPicoTrackCuts::IsPhiOK(TStarJetPicoPrimaryTrack *tr) {
+    Double_t phi = tr->GetPhi();
+    Double_t min=0, max=0;
+    for (unsigned i = 0; i < restrictedPhiRanges.size(); ++i) {
+        min = restrictedPhiRanges[i][0];
+        max = restrictedPhiRanges[i][1];
+        if ( phi >= min && phi <= max ) {
+            __DEBUG(9, Form("Reject. %f < %f < %f", min, phi, max) );
+            return kFALSE;
+        }
+    }
+    __DEBUG(9, Form("Accept. ! %f < %f < %f", min, phi, max) );
+    return kTRUE;
+}
+
 Bool_t TStarJetPicoTrackCuts::IsTrackOK(TStarJetPicoPrimaryTrack *tr)
 {
-  return IsDCAOK(tr) && IsMinNFitPointsOK(tr) && IsFitOverMaxPointsOK(tr) && IsMaxPtOK(tr) && IsChi2OK(tr) && IsPCTOK(tr);
+  return IsDCAOK(tr) && IsMinNFitPointsOK(tr) && IsFitOverMaxPointsOK(tr) && IsMaxPtOK(tr) && IsChi2OK(tr) && IsPCTOK(tr) && IsPhiOK(tr);
 }
 
 Bool_t TStarJetPicoTrackCuts::CheckTrackQA(TStarJetPicoPrimaryTrack *tr)
@@ -181,21 +194,70 @@ Bool_t TStarJetPicoTrackCuts::CheckTrackQA(TStarJetPicoPrimaryTrack *tr)
   return IsTrackOK(tr);
 }
 
-Bool_t TStarJetPicoTrackCuts::SetPhiCut(Double_t min, Double_t max)
+Bool_t TStarJetPicoTrackCuts::RestrictPhiRange(Double_t min, Double_t max)
 {
-    Bool_t retval = kTRUE;
-    if ( min > TMath::Pi() || min < (-1.0)*TMath::Pi() ) {
-        __ERROR("Phi minimum cut out of bounds [-Pi,Pi]");
-        retval = kFALSE;
-    }
-    if ( max > TMath::Pi() || max < (-1.0)*TMath::Pi() ) {
-        __ERROR("Phi maximum cut out of bounds [-Pi,Pi]");
-        retval = kFALSE;
-    }
-    if (!retval)
-        return retval;
+    // nick elsey: mapping any phi region defined on [-pi, pi], or [0, 2*pi]
+    // onto a linear sequence of regions that can be used by IsPhiOk()
+    // returns false if the input is defined on [-2*pi, 0], etc
     
-    fMinPhi = min;
-    fMaxPhi = max;
+    double pi = TMath::Pi();
+    //for pairs defined on [-pi, pi]
+    if ( min >= -pi && min < pi && max <= pi && max > -pi ) {
+        if ( min < max ) {
+            AddPhiCut( min, max );
+            return kTRUE;
+        }
+        else if ( min > max ) {
+            AddPhiCut( -pi, max );
+            AddPhiCut( min, pi );
+            return kTRUE;
+        }
+        else {
+            __ERROR( Form("Error: phiMin is equal to phiMax: ambiguous.") );
+            return kFALSE;
+        }
+    }
+    else if (min >= 0.0 && min < 2.0*pi && max > 0.0 && max <= 2.0*pi ) {
+        if ( min <= pi && max > pi ) {
+            AddPhiCut( -pi, max - 2.0*pi );
+            AddPhiCut( min, pi );
+            return kTRUE;
+        }
+        else if ( min > pi && max <= pi ) {
+            AddPhiCut( min - 2.0*pi, max );
+            return kTRUE;
+        }
+        else if (min >= pi && max >= pi ) {
+            if ( min > max ) {
+                AddPhiCut( min - 2.0*pi, pi );
+                AddPhiCut( -pi, max - 2.0*pi );
+                return kTRUE;
+            }
+            else if ( min < max ) {
+                AddPhiCut( min - 2.0*pi, max - 2.0*pi );
+                return kTRUE;
+            }
+        }
+        else {
+            __ERROR(Form("Error: Couldn't convert phiMin and PhiMax.") );
+            return kFALSE;
+        }
+    }
+    else {
+        __ERROR( Form("Error: Unrecognized Phi definition.") );
+        return kFALSE;
+    }
+    return kFALSE;
+}
+
+Bool_t TStarJetPicoTrackCuts::AddPhiCut(Double_t min, Double_t max) {
+    if (!(min >= -TMath::Pi() && min <= TMath::Pi() && max >= -TMath::Pi() && max <= TMath::Pi() )){
+        __ERROR(Form("Internal conversion error, apologies") );
+        return kFALSE;
+    }
+    std::vector<double> temp;
+    temp.push_back( min );
+    temp.push_back( max );
+    restrictedPhiRanges.push_back( temp );
     return kTRUE;
 }

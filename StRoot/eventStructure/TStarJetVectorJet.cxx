@@ -44,6 +44,17 @@ TStarJetVectorJet::TStarJetVectorJet(const TStarJetVectorJet &v)
   ;
 }
 
+TStarJetVectorJet::TStarJetVectorJet(const TStarJetVector &v)
+  : TStarJetVector(v)
+  , fConstituentIndexes(__INITIAL_NUMBER_OF_JET_CONSTITUENTS)
+  , fNConstituents(0)
+  , fArea4Vector(__AREA4VECTOR_N)
+  , fLeadingPt(0.0)
+  , fLeadingIndex(-1)
+{
+  ;
+}
+
 TStarJetVectorJet::TStarJetVectorJet(const TStarJetVector &v,
 				     const TArrayI &ConstituentIndexes,
 				     const Int_t   &NConstituents,					 

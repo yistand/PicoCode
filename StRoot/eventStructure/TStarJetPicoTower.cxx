@@ -26,6 +26,7 @@ TStarJetPicoTower::TStarJetPicoTower()
   // Default constructor
   // All indexes of the matched tracks are set to -1
   //
+  // std::cout << "calling the standard ctor" << std::endl;
   fMatchedTracks.Reset(-1);
 }
 
@@ -42,12 +43,12 @@ TStarJetPicoTower::TStarJetPicoTower(TStarJetPicoTower &t)
   , fEtaCorrected(t.fEtaCorrected) 
   , fPhiCorrected(t.fPhiCorrected)   
   , fNAssocTracks(t.fNAssocTracks)
-  , fMatchedTracks(t.fMatchedTracks)
 {
   //
   // Copy constructor
   //
-  ;
+  // std::cout << "calling the copy ctor" << std::endl;
+  fMatchedTracks.Copy(t.fMatchedTracks);
 }
 
 TStarJetPicoTower::~TStarJetPicoTower()

@@ -23,6 +23,7 @@ class TStarJetPicoEventHeader : public TObject
   Double_t   GetProperReferenceMultiplicity(); 
 
   Int_t   GetReferenceMultiplicity()     const {return fRefMult;}
+  Int_t   GetRefMultRank0()              const {return fRefMultRank0;}
   Int_t   GetGReferenceMultiplicity()    const {return fGRefMult;}
   Int_t   GetReferenceCentrality()     const {return fRefCent;}
   Int_t   GetGReferenceCentrality()    const {return fGRefCent;}
@@ -30,6 +31,7 @@ class TStarJetPicoEventHeader : public TObject
   Double_t   GetGReferenceCentralityWeight()    const {return fGRefCentWeight;}
   Double_t   GetCorrectedReferenceMultiplicity()     const {return fCorRefMult;}
   Double_t   GetCorrectedGReferenceMultiplicity()    const {return fCorGRefMult;}
+  Double_t   GetGRefMultCorrRank0()             const {return fGRefMultCorrRank0;}
   Int_t   GetNGlobalTracks()             const {return fNOfGlobalTracks;}
   Float_t GetReactionPlaneAngle()        const {return fReactionPlaneAngle;}
   Int_t   GetTriggerId(Int_t ic)         const {return fTriggerIdArray.At(ic);}
@@ -56,6 +58,7 @@ class TStarJetPicoEventHeader : public TObject
   Float_t GetCTBMultiplicity()           const {return fCTBmult;}
   Float_t GetPrimaryVertexMeanDipAngle() const {return fMeanDip;}
   Float_t GetPrimaryVertexRanking()      const {return fRank;}
+  Int_t   GetPrimaryVertexID()           const {return fVertID;}
   Int_t   GetNumberOfVertices()          const {return fNOfVertices;}
   Int_t   GetDSMInput()                  const {return fDSMInput;}
   Int_t   GetTrigMask()                  const {return fTrigMask;}
@@ -84,6 +87,7 @@ class TStarJetPicoEventHeader : public TObject
   void SetEventId(Int_t val)                     {fEventId = val;}
   void SetRunId(Int_t val)                       {fRunId = val;}
   void SetReferenceMultiplicity(Int_t val)       {fRefMult = val;}
+  void SetRefMultRank0(Int_t val)                {fRefMultRank0 = val;}
   void SetGReferenceMultiplicity(Int_t val)      {fGRefMult = val;}
   void SetReferenceCentrality(Int_t val)       {fRefCent = val;}
   void SetGReferenceCentrality(Int_t val)      {fGRefCent = val;}
@@ -91,6 +95,7 @@ class TStarJetPicoEventHeader : public TObject
   void SetGReferenceCentralityWeight(Double_t val)      {fGRefCentWeight = val;}
   void SetCorrectedReferenceMultiplicity(Double_t val)       {fCorRefMult = val;}
   void SetCorrectedGReferenceMultiplicity(Double_t val)      {fCorGRefMult = val;}
+  void SetGRefMultCorrRank0(Double_t val)               {fGRefMultCorrRank0 = val;}
 
   void SetNPrimaryTracks(Int_t val)              {fNOfPrimaryTracks = val;}
   void SetNFtpcPrimaryTracks(Int_t val)          {fNOfFtpcPrimaryTracks = val;}
@@ -119,6 +124,7 @@ class TStarJetPicoEventHeader : public TObject
   void SetCTBMultiplicity(Float_t val)           {fCTBmult = val;}
   void SetPrimaryVertexMeanDipAngle(Float_t val) {fMeanDip = val;}
   void SetPrimaryVertexRanking(Float_t val)      {fRank = val;}
+  void SetPrimaryVertexID(Int_t val)             {fVertID = val;}
   void SetNumberOfVertices(Int_t val)            {fNOfVertices = val;}
   void SetDSMInput(Int_t val)                    {fDSMInput = val;}
   void SetTrigMask(Int_t val)                    {fTrigMask = val;}
@@ -150,6 +156,7 @@ class TStarJetPicoEventHeader : public TObject
   Int_t           fEventId;              // was evid;  // event ID
   Int_t           fRunId;                // was runid; // run ID
   Int_t           fRefMult;              // reference multiplicity
+  Int_t           fRefMultRank0;         // reference multiplicity of zeroth-ranked vertex
   Int_t           fGRefMult;             // reference multiplicity for AuAu07
   Int_t           fRefCent;              // StRefMultCorr centrality9
   Int_t           fGRefCent;             // StRefMultCorr grefmult centrality9
@@ -157,6 +164,7 @@ class TStarJetPicoEventHeader : public TObject
   Double_t        fGRefCentWeight;       // StRefMultCorr event weight for trigger effiency
   Double_t        fCorRefMult;           // StRefMultCorr Corrected refmult 
   Double_t        fCorGRefMult;          // StRefMultCorr Corrected grefmult
+  Int_t           fGRefMultCorrRank0;        // GReference multiplicty of zeroth-ranked vertex
   Int_t           fNOfGlobalTracks;      // was gtracks;    // number of global tracks
   Float_t         fReactionPlaneAngle;   // rplane;     // reaction plane orientation
   Int_t           fNOfTriggerIds;        // number of trigger ids 
@@ -177,6 +185,7 @@ class TStarJetPicoEventHeader : public TObject
   Float_t         fCTBmult;              // entral barrel multiplicity 
   Float_t         fMeanDip;              // primary vertex mean dip angle
   Float_t         fRank;                 // ranking of the vertex
+  Int_t           fVertID;               // ID of chosen vertex
   Int_t           fNOfVertices;          // number of vertices
   Int_t           fNOfTrigObjs;          // no of trigger objects
   Int_t           fDSMInput;             // trigger: DSM

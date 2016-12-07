@@ -26,14 +26,16 @@
 
 ClassImp(TStarJetVector)
 
-#define __TStarJetVector_NfeauresD 8
-#define __TStarJetVector_NfeauresI 5
+#define __TStarJetVector_NfeaturesD 8
+#define __TStarJetVector_NfeaturesI 6
 
 TStarJetVector::TStarJetVector()
   : TLorentzVector()
-  , fFeaturesD(__TStarJetVector_NfeauresD)
-  , fFeaturesI(__TStarJetVector_NfeauresI)
+  , fFeaturesD(__TStarJetVector_NfeaturesD)
+  , fFeaturesI(__TStarJetVector_NfeaturesI)
+  , fTrigger(kFALSE)
 {
+
   Clear();
 }
 
@@ -41,12 +43,23 @@ TStarJetVector::TStarJetVector(const TStarJetVector &v)
   : TLorentzVector(v)
   , fFeaturesD(v.fFeaturesD)
   , fFeaturesI(v.fFeaturesI)
+  , fTrigger(kFALSE)
 {
   ;
 }
 
-TStarJetVector::~TStarJetVector()
+TStarJetVector::TStarJetVector(const TLorentzVector &lv)
+  : TLorentzVector(lv)
+  , fFeaturesD(__TStarJetVector_NfeaturesD)
+  , fFeaturesI(__TStarJetVector_NfeaturesI)
+  , fTrigger(kFALSE)
 {
+  Clear();
+}
+
+
+TStarJetVector::~TStarJetVector()
+{  
   ;
 }
 
@@ -73,10 +86,12 @@ void TStarJetVector::SetFeatureI(Int_t idx, Int_t value)
 void TStarJetVector::Clear(Option_t *option)
 {
   TLorentzVector::Clear(option);
-  fFeaturesD.Set(__TStarJetVector_NfeauresD);
-  fFeaturesI.Set(__TStarJetVector_NfeauresD);
+  fFeaturesD.Set(__TStarJetVector_NfeaturesD);
+  fFeaturesI.Set(__TStarJetVector_NfeaturesI);
   fFeaturesD.Reset(0.0);
   fFeaturesI.Reset(0);
+  fFeaturesI[_MATCH] = -1; // KK
+  fTrigger = kFALSE;
 }
 
 double TStarJetVector::phi() const 

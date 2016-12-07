@@ -33,7 +33,8 @@ TStarJetPicoEventCuts::TStarJetPicoEventCuts()
   , fFlagPVRankingCut(kFALSE) //reasonable value of PV Ranking Cut depends on PV finder & dataset used -> off by default!
   , fMaxEventPt ( 99999 )
   , fMaxEventEt ( 99999 )
-  , fMinEventEt( -1 ) // software HT trigger AFTER hadronic correction.
+  , fMinEventEt( -1 ) // software HT trigger
+  , fUseRawForMinEventEtCut( true ) 
 {
   __DEBUG(2, "Creating event cuts with default values.");
 }
@@ -54,6 +55,7 @@ TStarJetPicoEventCuts::TStarJetPicoEventCuts(const TStarJetPicoEventCuts &t)
   , fMaxEventPt( t.fMaxEventPt )
   , fMaxEventEt( t.fMaxEventEt )
   , fMinEventEt( t.fMinEventEt )
+  , fUseRawForMinEventEtCut( t.fUseRawForMinEventEtCut )
 
 {
   __DEBUG(2, "Copy event cuts.");  
@@ -61,14 +63,38 @@ TStarJetPicoEventCuts::TStarJetPicoEventCuts(const TStarJetPicoEventCuts &t)
 
 Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
 {
-
+  // ORDER IS IMPORTANT!
+  // Scanning a string here, so check and completely evaluate things like
+  // Contains("HT3") before Contains("HT")
   __DEBUG(2, Form("mTrigId = %d TrigSel = %s", mTrigId, fTrigSel.Data()));
-  
+
   if (fTrigSel.Contains("pythia")||fTrigSel.Contains("mc"))
   {
 	__DEBUG(2, "Simulation event (pythia or mc) selected");
 	return kTRUE;
   }
+
+  //  -------------------- Run 14 HT3
+  if (fTrigSel.Contains("HT3") && !fTrigSel.Contains("pp")){
+    if ( mTrigId==450203 || mTrigId==450213 ) { // HT3*VPDMB-30 
+      __DEBUG(2, "HT3, Trigger for Au+Au  run 14 ok");
+      return kTRUE;
+    } else {
+      __DEBUG(2, "HT3, Trigger for Au+Au  run 14 NOT ok");
+      return kFALSE;
+    }
+  }
+  //  -------------------- Run 14 HT2
+  if (fTrigSel.Contains("HT2") && !fTrigSel.Contains("pp")){
+    if ( mTrigId==450202 || mTrigId==450212 ) { // HT3*VPDMB-30 
+      __DEBUG(2, "HT2, Trigger for Au+Au  run 14 ok");
+      return kTRUE;
+    } else {
+      __DEBUG(2, "HT2, Trigger for Au+Au  run 14 NOT ok");
+      return kFALSE;
+    }
+  }
+
 
   if (fTrigSel.Contains("pp"))
     {
@@ -97,6 +123,7 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
 		}
 	      else 
 		{
+		  __DEBUG(2, "Reject ppHT trigger.");
 		  return kFALSE;
 		}
 	    }
@@ -183,6 +210,63 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
  
   if (fTrigSel.Contains("pAu",TString::kIgnoreCase))
   {
+	if ( fTrigSel.Contains("pAuVPDMB",TString::kIgnoreCase)) {
+		if (mTrigId==500904) {		// VPDMB
+			__DEBUG(2, "VPDMB Trigger p+Au events 200GeV run 15 selected");
+        		return kTRUE;
+		}
+		else {
+			__DEBUG(2, "Reject trigger for pAVPDMB");
+			return kFALSE;
+		}
+	} 
+	else 
+	if ( fTrigSel.Contains("pAuBBCMB",TString::kIgnoreCase)) {
+		if (mTrigId==500008 || mTrigId== 500018) {		// BBCMB
+			__DEBUG(2, "BBCMB Trigger p+Au events 200GeV run 15 selected");
+        		return kTRUE;
+		}
+		else {
+			__DEBUG(2, "Reject trigger for pAuBBCMB");
+			return kFALSE;
+		}
+	} 
+	else 
+	if ( fTrigSel.Contains("pAuBHT1",TString::kIgnoreCase)) {
+		if (mTrigId==500202 || mTrigId== 500204 || mTrigId== 500206 || mTrigId== 500214) {		// BHT1*VPDMB-30, BHT1*BBCMB, BHT1*VPDMB-30_nobsmd, BHT1*BBCMB
+			__DEBUG(2, "BHT1*VPDMB-30, BHT1*BBCMB, BHT1*VPDMB-30_nobsmd, BHT1*BBCMB Trigger p+Au 200GeV events run 15 selected");
+        		return kTRUE;
+		}
+		else {
+			__DEBUG(2, "Reject trigger for pAuBHT1");
+			return kFALSE;
+		}
+	} 
+	else 
+	if ( fTrigSel.Contains("pAuBHT2",TString::kIgnoreCase)) {
+		if (mTrigId==500205 || mTrigId== 500215) {		// BHT2*BBCMB
+			__DEBUG(2, "BHT2*BBCMB Trigger p+Au 200GeV events run 15 selected");
+        		return kTRUE;
+		}
+		else {
+          		__DEBUG(2, "Reject trigger for pAuBHT2");
+			return kFALSE;
+		}
+	} 
+	else 
+	if ( fTrigSel.Contains("pAuJP2",TString::kIgnoreCase)) {
+		if (mTrigId==500401 || mTrigId==500402 || mTrigId==500411 || mTrigId== 500412 ) {		// JP2 and JP2-bsmd
+			__DEBUG(2, "JP2 and JP2-bsmd Triggers p+Au 200GeV events run 15 selected");
+        		return kTRUE;
+		}
+		else {
+          		__DEBUG(2, "Reject trigger for pAuJP2");
+			return kFALSE;
+		}
+	} 
+
+
+
         if ( mTrigId==500008 ||mTrigId==500018 ||mTrigId==500201 ||mTrigId==500202 ||mTrigId==500203 ||mTrigId==500204 ||mTrigId==500205 ||mTrigId==500206 ||mTrigId==500213 ||mTrigId==500214 ||mTrigId==500215 ||mTrigId==500401 ||mTrigId==500402 ||mTrigId==500411 ||mTrigId==500412 ||mTrigId==500904)
 //BBCMB, BBCMB, BHT0*VPDMB-5, BHT1*VPDMB-30, BHT0*BBCMB, BHT1*BBCMB, BHT2*BBCMB, BHT1*VPDMB-30_nobsmd, BHT0*BBCMB, BHT1*BBCMB, BHT2*BBCMB, JP2, JP2-bsmd, JP2, JP2-bsmd, VPDMB-30
         {
@@ -218,7 +302,15 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
 	  __DEBUG(2, "HT Trigger for Au+Au  run 11 ok");
 	  return kTRUE;
 	}
-      else
+        else if (mTrigId==450201 || mTrigId==450211 || // HT1*VPDMB-30
+		 mTrigId==450202 || mTrigId==450212 || // HT2*VPDMB-30
+		 mTrigId==450203 || mTrigId==450213 )  // HT3*VPDMB-30
+	{
+	  __DEBUG(2, "HT1, HT2, HT3, Trigger for Au+Au  run 14 ok");
+	  return kTRUE;
+	}
+
+	else
 	{
 	  __DEBUG(2, "Reject HT trigger for Au+Au.");
 	  return kFALSE;	
@@ -362,7 +454,7 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
 Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(TStarJetPicoEvent *mEv)
 {
   Bool_t retval = kFALSE;
-  if (fTrigSel.Contains("All"))
+  if (fTrigSel.Contains("All") || fTrigSel.Contains("all") )
     {
       __DEBUG(2, "All events taken, no Trigger selection"); 
       return kTRUE;
@@ -378,6 +470,7 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(TStarJetPicoEvent *mEv)
 	}
     }
 
+  if ( !retval ) __DEBUG(1, Form("Reject. No suitable trigger.") );
   return retval;
 }
 
@@ -413,7 +506,7 @@ Int_t TStarJetPicoEventCuts::GetReferenceMultiplicity(TStarJetPicoEvent *mEv)
   return RefMult;
 }
 
-Bool_t TStarJetPicoEventCuts::IsRefMultOK(TStarJetPicoEvent *mEv)
+Bool_t TStarJetPicoEventCuts::IsRefMultOK(TStarJetPicoEvent *mEv )
 {
   // KK: Simplified
   Double_t RefMult = mEv->GetHeader()->GetProperReferenceMultiplicity();
@@ -570,9 +663,9 @@ Bool_t TStarJetPicoEventCuts::CheckEvent(TStarJetPicoEvent *mEv, TChain *fInputT
 Bool_t TStarJetPicoEventCuts::IsEventOK(TStarJetPicoEvent *mEv, TChain *fInputTree)
 {
   Bool_t retval;
-  retval = (IsRefMultOK(mEv) && IsRefCentOK(mEv, fInputTree) && IsVertexZOK(mEv) && IsTriggerIdOK(mEv) && (fFlagPVRankingCut==kFALSE || IsPVRankingOK(mEv)) );
+  //retval = (IsRefMultOK(mEv) && IsRefCentOK(mEv, fInputTree) && IsVertexZOK(mEv) && IsTriggerIdOK(mEv) && (fFlagPVRankingCut==kFALSE || IsPVRankingOK(mEv)) );
   //#ly std::cout<< "IsRefMultOK(mEv)=" << IsRefMultOK(mEv) << " IsRefCentOK(mEv, fInputTree) = "<<  IsRefCentOK(mEv, fInputTree) <<  " IsVertexZOK(mEv)=" <<  IsVertexZOK(mEv) << " IsTriggerIdOK(mEv) = " << IsTriggerIdOK(mEv) << " (fFlagPVRankingCut==kFALSE || IsPVRankingOK(mEv) =" <<  IsPVRankingOK(mEv) << std::endl;
-  //#ly 16.03.24 maybe not suitable for pp data.      retval = (IsRefMultOK(mEv) && IsRefCentOK(mEv, fInputTree) && IsVertexZOK(mEv) && IsTriggerIdOK(mEv) && (fFlagPVRankingCut==kFALSE || IsPVRankingOK(mEv)) && IsVertexZDiffOK(mEv) );	//#ly new data has VPD information
+  retval = (IsRefMultOK(mEv) && IsRefCentOK(mEv, fInputTree) && IsVertexZOK(mEv) && IsTriggerIdOK(mEv) && (fFlagPVRankingCut==kFALSE || IsPVRankingOK(mEv)) && IsVertexZDiffOK(mEv) );	//#ly new data has VPD information  //was commented out by #ly 16.03.24 maybe not suitable for pp data.      // was reused again by #ly 16.11.09 if user doesn't want to use vpd cuts, should set VzDiff to a large number 999999. Otherwise, by commented it out, it certainly mislead the user to think one is selecting on vpddiff, Which is WRONG 
   
   //#ly 16.03.24 if needed, print out what cuts are applied to the events
   if(fFlagPVRankingCut) {

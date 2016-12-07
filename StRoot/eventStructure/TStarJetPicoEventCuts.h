@@ -66,6 +66,8 @@ class TStarJetPicoEventCuts : public TObject
   virtual void SetMaxEventPtCut( Float_t val)     { fMaxEventPt = val;}
   virtual void SetMaxEventEtCut( Float_t val)     { fMaxEventEt = val;}
   virtual void SetMinEventEtCut( Float_t val)     { fMinEventEt = val;}
+  // Use hadronic correction for soft HT cut?
+  virtual void SetUseRawForMinEventEtCut( Bool_t val)     { fUseRawForMinEventEtCut = val;}
       
   virtual Int_t  GetReferenceMultiplicity(TStarJetPicoEvent *mEv);
 
@@ -81,6 +83,7 @@ class TStarJetPicoEventCuts : public TObject
   Float_t GetMaxEventPtCut()     {return fMaxEventPt;}
   Float_t GetMaxEventEtCut()     {return fMaxEventEt;}
   Float_t GetMinEventEtCut()     {return fMinEventEt;}
+  Bool_t  GetUseRawForMinEventEtCut()     { return fUseRawForMinEventEtCut;}
     
   Int_t   GetRefCentMin()       {return fRefCentCutMin;}
   Int_t   GetRefCentMax()       {return fRefCentCutMax;}
@@ -103,6 +106,7 @@ class TStarJetPicoEventCuts : public TObject
   Float_t fMaxEventPt;
   Float_t fMaxEventEt;
   Float_t fMinEventEt;
+  Bool_t  fUseRawForMinEventEtCut;
   
   ClassDef(TStarJetPicoEventCuts, 3)
 };

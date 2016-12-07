@@ -121,7 +121,10 @@ void TStarJetPicoEvent::AddPrimaryTrack(TStarJetPicoPrimaryTrack *t)
 {
   TClonesArray &tracks = *fPrimaryTracks;
   Int_t fNtrack = fEventHeader.GetNOfPrimaryTracks();
-  TStarJetPicoPrimaryTrack *track = new(tracks[fNtrack++]) TStarJetPicoPrimaryTrack(*t);
+  // Use ConstructedAt!! new defeats the purpose of tclonesarray (and swamps the memory)
+  // TStarJetPicoPrimaryTrack *track = new(tracks[fNtrack++]) TStarJetPicoPrimaryTrack(*t);
+  TStarJetPicoPrimaryTrack *track = (TStarJetPicoPrimaryTrack*) tracks.ConstructedAt(fNtrack++);
+  *track = *t;
   fEventHeader.SetNOfPrimaryTracks(fNtrack);
   fLastPrimaryTrack = track;
   __DEBUG(4, Form("Primary Track added. Current number is %d", fPrimaryTracks->GetEntriesFast()));
@@ -132,7 +135,11 @@ void TStarJetPicoEvent::AddFtpcPrimaryTrack(TStarJetPicoPrimaryTrack *t)
 {
   TClonesArray &tracks = *fFtpcPrimaryTracks;
   Int_t fNtrack = fEventHeader.GetNOfFtpcPrimaryTracks();
-  TStarJetPicoPrimaryTrack *track = new(tracks[fNtrack++]) TStarJetPicoPrimaryTrack(*t);
+  // Use ConstructedAt!! new defeats the purpose of tclonesarray (and swamps the memory)
+  // TStarJetPicoPrimaryTrack *track = new(tracks[fNtrack++]) TStarJetPicoPrimaryTrack(*t);
+  // TStarJetPicoPrimaryTrack *track = new(tracks[fNtrack++]) TStarJetPicoPrimaryTrack(*t);
+  TStarJetPicoPrimaryTrack *track = (TStarJetPicoPrimaryTrack*) tracks.ConstructedAt(fNtrack++);
+  *track = *t;
   fEventHeader.SetNOfFtpcPrimaryTracks(fNtrack);
   fLastFtpcPrimaryTrack = track;
   __DEBUG(4, Form("FTPC Primary Track added. Current number is %d", fFtpcPrimaryTracks->GetEntriesFast()));
@@ -141,11 +148,15 @@ void TStarJetPicoEvent::AddFtpcPrimaryTrack(TStarJetPicoPrimaryTrack *t)
 //______________________________________________________________________________
 void TStarJetPicoEvent::AddTower(TStarJetPicoTower *t)
 {
-   TClonesArray &towers = *fTowers;
-   Int_t fNtower = fEventHeader.GetNOfTowers();
-   TStarJetPicoTower *tower = new(towers[fNtower++]) TStarJetPicoTower(*t);
-   fEventHeader.SetNOfTowers(fNtower);
-   fLastTower = tower;
+  TClonesArray &towers = *fTowers;
+  Int_t fNtower = fEventHeader.GetNOfTowers();
+  // Use ConstructedAt!! new defeats the purpose of tclonesarray (and swamps the memory)
+  //TStarJetPicoTower *tower = new(towers[fNtower++]) TStarJetPicoTower(*t);
+  
+  TStarJetPicoTower *tower = (TStarJetPicoTower*) towers.ConstructedAt(fNtower++);
+  *tower = *t;
+  fEventHeader.SetNOfTowers(fNtower);
+  fLastTower = tower;
   __DEBUG(4, Form("Tower added. Current number is %d", fTowers->GetEntriesFast()));
 }
 
@@ -155,7 +166,12 @@ void TStarJetPicoEvent::AddV0(TStarJetPicoV0 *t)
   __DEBUG(4, Form("Adding V0. Current number is %d", fV0s->GetEntriesFast()));
   TClonesArray &V0s = *fV0s;
   Int_t fNV0 = fEventHeader.GetNOfV0s();
+  
+  // FIXME: Use ConstructedAt!! new defeats the purpose of tclonesarray (and swamps the memory)
+  // FIXME: Needs a copy constructor
   TStarJetPicoV0 *V0 = new(V0s[fNV0++]) TStarJetPicoV0(*t);
+  // TStarJetPicoV0 *V0 = (TStarJetPicoV0*) V0s.ConstructedAt(fNV0++);
+  // *V0 = t;
   fEventHeader.SetNOfV0s(fNV0);
   fLastV0 = V0;
   __DEBUG(4, Form("V0 added. Current number is %d", fV0s->GetEntriesFast()));
@@ -163,13 +179,13 @@ void TStarJetPicoEvent::AddV0(TStarJetPicoV0 *t)
 //______________________________________________________________________________
 void TStarJetPicoEvent::AddTrigObj(TStarJetPicoTriggerInfo *t)
 {
-   TClonesArray &trigobj = *fTrigObjs;
-   Int_t fNtrig = fEventHeader.GetNOfTrigObjs();
-   TStarJetPicoTriggerInfo *trig = new(trigobj[fNtrig++]) TStarJetPicoTriggerInfo(*t);
-   fEventHeader.SetNOfTrigObjs(fNtrig);
-   fLastTrigObj = trig;
-   __DEBUG(4, Form("Adding trigger object. Current number is %d (counter) %d(::GetEntries", 
-		   fNtrig, fTrigObjs->GetEntriesFast()));
+  TClonesArray &trigobj = *fTrigObjs;
+  Int_t fNtrig = fEventHeader.GetNOfTrigObjs();
+  TStarJetPicoTriggerInfo *trig = new(trigobj[fNtrig++]) TStarJetPicoTriggerInfo(*t);
+  fEventHeader.SetNOfTrigObjs(fNtrig);
+  fLastTrigObj = trig;
+  __DEBUG(4, Form("Adding trigger object. Current number is %d (counter) %d(::GetEntries", 
+		  fNtrig, fTrigObjs->GetEntriesFast()));
 }
 //______________________________________________________________________________
 TStarJetPicoPrimaryTrack *TStarJetPicoEvent::GetPrimaryTrack(Int_t n)

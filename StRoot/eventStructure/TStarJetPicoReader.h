@@ -35,6 +35,12 @@ class TStarJetPicoReader : public TStarJetPicoReaderBase
   TStarJetPicoTowerCuts* GetTowerCuts() {return fTowerCuts;}
   TStarJetPicoV0Cuts*    GetV0Cuts()    {return fV0Cuts;}
 
+  // added by kk to grab an offline high tower
+  // Hadronic correction is controlled by UseRawForMinEventEtCut!
+  // CAREFUL with JetTreeMc data, where everything is a "track"!
+  // returns 0 if none found or towers not processed
+  TStarJetVector*        GetHighTower( ) const  {  return mHighTower;}
+
   void SetRejectTowerElectrons(Bool_t val) {fRejectTowerElectrons = val;}
   void SetApplyMIPCorrection(Bool_t val);
   void SetApplyFractionHadronicCorrection(Bool_t val);
@@ -75,6 +81,8 @@ class TStarJetPicoReader : public TStarJetPicoReaderBase
   Int_t   fTrackPileUpCut;	// #ly Li Yi 2015.10.19		whether apply pile up cut, currently matching TPC tracks to bemc or tof
 				// #ly Li Yi 2016.01.22		0: no pile up cut. 1: match to bemc or tof. 2: match to tof
   
+  TStarJetVector*        mHighTower; //! KK: highest tower, filled during LoadTowers
+
   // DEBUG
   /// To count the number of rejected towers
   TH1D* HadronicResult;

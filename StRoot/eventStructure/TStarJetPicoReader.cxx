@@ -49,6 +49,7 @@ TStarJetPicoReader::TStarJetPicoReader()
   , fApplyMIPCorrection(kTRUE)
   , fApplyFractionHadronicCorrection(kFALSE)
   , fFractionHadronicCorrection(0.3)
+  , mHighTower (0)
   , fTrackPileUpCut(0)		// #ly Li Yi 2015.10.19         whether apply pile up cut, currently matching TPC tracks to bemc or tof
 				// #ly Li Yi 2016.01.22		0: no pile up cut. 1: match to bemc or tof. 2: match to tof. 3: match to bemc
 {
@@ -285,22 +286,6 @@ Bool_t TStarJetPicoReader::LoadTracks(TArrayI *trackIdsToRemove)
   if ( MaxEventPtCut < 99999 && MaxEventPtCut > MaxPtCut){
     __WARNING(Form("MaxEventPtCut %f will not fire because MaxPtCut is %f.", MaxEventPtCut, MaxPtCut));
   }
-    
-  //nick elsey: check to see if there is a phi range restriction
-  Double_t phiMin = fTrackCuts->GetMinPhiCut();
-  Double_t phiMax = fTrackCuts->GetMaxPhiCut();
-  Bool_t phiRange = kFALSE;
-  Bool_t restrictToInsidePhiRange = kTRUE;
-    
-  if ( !(phiMin == 0.0 && phiMax == 0.0) )
-    phiRange = kTRUE;
-  if ( phiMin > phiMax ) {
-    phiRange = kTRUE;
-    restrictToInsidePhiRange = kFALSE;
-    Double_t temporary = phiMin;
-    phiMin = phiMax;
-    phiMax = temporary;
-  }
 
   TStarJetVector part;
   for (Int_t ntrack = 0; 
@@ -308,16 +293,6 @@ Bool_t TStarJetPicoReader::LoadTracks(TArrayI *trackIdsToRemove)
        ntrack++)
     {      
       TStarJetPicoPrimaryTrack *ptrack = fEvent->GetPrimaryTrack(ntrack);
-        
-      // nick elsey: first check for phi resrictions
-      if ( phiRange && restrictToInsidePhiRange ) {
-        if ( phiMin > ptrack->GetPhi() || phiMax < ptrack->GetPhi() )
-	  continue;
-      }
-      else if ( phiRange && !restrictToInsidePhiRange ) {
-        if ( phiMin < ptrack->GetPhi() && phiMax > ptrack->GetPhi() )
-	  continue;
-      }
 
       // check if track taken by V0 - if yes skip it here
       if (IsKeyInArray(ptrack->GetKey(), trackIdsToRemove) == kTRUE)
@@ -371,7 +346,7 @@ Bool_t TStarJetPicoReader::LoadTowers()
   // Correct for hadronic showers.
   // Add to surviving TStarJetVector to the output container.
   // 
-
+  
   // KK: Make sure cuts are consistent
   float MaxEventEtCut = fEventCuts->GetMaxEventEtCut();
   float MaxEtCut = fTowerCuts->GetMaxEtCut();
@@ -379,27 +354,14 @@ Bool_t TStarJetPicoReader::LoadTowers()
   if ( MaxEventEtCut < 99999 && MaxEventEtCut > MaxEtCut){
     __WARNING(Form("MaxEventEtCut %f will not fire because MaxEtCut is %f.", MaxEventEtCut, MaxEtCut));
   }
-    
-  //nick elsey: check to see if there is a phi range restriction
-  Double_t phiMin = fTowerCuts->GetMinPhiCut();
-  Double_t phiMax = fTowerCuts->GetMaxPhiCut();
-  Bool_t phiRange = kFALSE;
-  Bool_t restrictToInsidePhiRange = kTRUE;
-    
-  if ( !(phiMin == 0.0 && phiMax == 0.0) )    phiRange = kTRUE;
-  if ( phiMin > phiMax ) {
-    phiRange = kTRUE;
-    restrictToInsidePhiRange = kFALSE;
-    Double_t temporary = phiMin;
-    phiMin = phiMax;
-    phiMax = temporary;
-  }
   
   TStarJetVector part;
   
   // KK: Initialize high tower
-  Float_t mHighTower=0;
-
+  Float_t mHighTowerEt=0;
+  if ( mHighTower ) delete mHighTower;
+  mHighTower=0;  
+  
   for (Int_t ntower = 0;
        ntower < fEvent->GetHeader()->GetNOfTowers(); 
        ntower++) { 
@@ -407,15 +369,6 @@ Bool_t TStarJetPicoReader::LoadTowers()
     Bool_t isElectronCandidate = kFALSE;
     
     if (fTowerCuts->IsTowerOK(ptower, fEvent) == kTRUE) {
-      // nick elsey: first check to see that the tower is in the correct phi region
-      if ( phiRange && restrictToInsidePhiRange ) {
-	if ( phiMin > ptower->GetPhi() || phiMax < ptower->GetPhi() )
-	  continue;
-      }
-      else if ( phiRange && !restrictToInsidePhiRange ) {
-	if ( phiMin < ptower->GetPhi() && phiMax > ptower->GetPhi() )
-	  continue;
-      }
           
       // check the associated tracks
       for (Int_t ntrack = 0; ntrack < ptower->GetNAssocTracks(); ntrack++)
@@ -457,20 +410,22 @@ Bool_t TStarJetPicoReader::LoadTowers()
 							 fTrackCuts,
 							 fFractionHadronicCorrection);
       }
-
+      
       // DEBUG
       HadronicResult->Fill(correctedEnergy);
 
+      Double_t mEt = 0;
+      // for high tower
+      Double_t mRawEt = ptower->GetEnergy() / TMath::CosH(ptower->GetEtaCorrected());
+      
       // fill the container
       if (correctedEnergy > 0) {
-	Double_t mEt = correctedEnergy / TMath::CosH(ptower->GetEtaCorrected());
+	mEt = correctedEnergy / TMath::CosH(ptower->GetEtaCorrected());
 	// KK: Now that the tower has passed quality control, check whether it's too high.
 	if ( !(fEventCuts->IsHighestEtOK( mEt )) ) {
 	  return kFALSE;
 	}
 	
-	// KK: Update highest tower
-	if ( mEt > mHighTower ) mHighTower = mEt;
 	
 	part.SetPtEtaPhiM(mEt, ptower->GetEtaCorrected(), ptower->GetPhiCorrected(), 0);
 	part.SetType(TStarJetVector::_TOWER);
@@ -483,11 +438,38 @@ Bool_t TStarJetPicoReader::LoadTowers()
       } else {
 	__DEBUG(9, Form("Reject Tower, correctedEnergy = %1.3f", correctedEnergy));
       }
+
+      // KK: Update highest tower? This is regardless of whether it survived hadr. corr.
+      if ( fEventCuts->GetUseRawForMinEventEtCut() ) {
+	if ( mRawEt > mHighTowerEt ) {
+	  __DEBUG(2, Form("Updating High Tower, UNcorrected Et = %1.3f", mRawEt));
+	  __DEBUG(2, Form("                      (corrected Et = %1.3f)", mEt));
+	  //	  __DEBUG(2, Form("                      Eta = %1.3f", ptower->GetEtaCorrected()));
+	  mHighTowerEt = mRawEt;
+	  if (mHighTower) delete mHighTower;
+	  mHighTower   = new TStarJetVector();
+	  mHighTower->SetPtEtaPhiM(mRawEt, ptower->GetEtaCorrected(), ptower->GetPhiCorrected(), 0);
+	  mHighTower->SetType(TStarJetVector::_TOWER);
+	  mHighTower->SetCharge(TStarJetVector::_NEUTRAL);	      
+	  mHighTower->SetPID(fTowerCuts->DoPID(ptower)); // not known yet...
+	  mHighTower->SetTowerID(ptower->GetId());
+	}
+      } else {
+	if ( mEt > mHighTowerEt ){
+	  __DEBUG(2, Form("Updating High Tower, corrected Et = %1.3f", mEt));
+	  __DEBUG(2, Form("                          (Raw Et = %1.3f)", mRawEt));
+	  mHighTowerEt = mEt;
+	  mHighTower = &part;
+	}
+      }
+      
     } // tower QA
   }
 
   // KK: soft high tower trigger
-  if ( !(fEventCuts->IsHighTowerOk( mHighTower )) ) {
+
+  if ( !(fEventCuts->IsHighTowerOk( mHighTowerEt )) ) {
+    __DEBUG(2, Form("Rejected.  High Tower Et = %1.3f", mHighTowerEt ));
     return kFALSE;
   }
   

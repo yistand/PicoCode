@@ -6,6 +6,8 @@
 #include <TArrayD.h>
 #include <TArrayI.h>
 
+#include <valarray>
+
 class TStarJetVectorJet : public TStarJetVector
 {
  public:
@@ -23,6 +25,7 @@ class TStarJetVectorJet : public TStarJetVector
 
   TStarJetVectorJet();  
   TStarJetVectorJet(const TStarJetVectorJet &v);  
+  TStarJetVectorJet(const TStarJetVector &v);
   virtual ~TStarJetVectorJet();
 
   const TArrayI *GetIndexes() const {return &fConstituentIndexes;}
@@ -55,6 +58,14 @@ class TStarJetVectorJet : public TStarJetVector
     fArea4Vector[1] = v1;
     fArea4Vector[2] = v2;
     fArea4Vector[3] = v3;
+  }
+
+  void           SetArea4Vector(const std::valarray< double >& v)
+  {
+    fArea4Vector[0] = v[0];
+    fArea4Vector[1] = v[1];
+    fArea4Vector[2] = v[2];
+    fArea4Vector[3] = v[3];
   }
 
   void Clear(const Option_t* option = "");

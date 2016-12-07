@@ -94,7 +94,8 @@ void TStarJetPicoQAHistograms::Init()
   hDeltaEtaDeltaPhiProj=new TH2D("DeltaEtaDeltaPhiProj","DeltaPhiEta;DeltaPhi;DeltaEta",100,-2,2,100,-10,10);
   hDeltaEtaDeltaPhiProjAcc=new TH2D("DeltaEtaDeltaPhiProjAcc","DeltaPhiEtaAcc;DeltaPhiAcc;DeltaEtaAcc",100,-0.1,0.1,100,-0.1,0.1);
 
-
+  hdVzClosestVertex = new TH1D("dVzClosestVertex", "dVzClosestVertex;dVz;Count", 100, -12, 12);
+  hdVzZerothIdVertex = new TH1D("dVzZerothIdVertex", "dVzZerothIdVertex;dVz;Count", 100, -12, 12);
 
   __INFO(Form("Init %s at %p.", this->GetName(), this));
 
@@ -146,6 +147,8 @@ TStarJetPicoQAHistograms::TStarJetPicoQAHistograms()
   , hPhiDeltaPhi(0)
   , hDeltaEtaDeltaPhiProj(0)
   , hDeltaEtaDeltaPhiProjAcc(0)
+  , hdVzClosestVertex(0)
+  , hdVzZerothIdVertex(0)
 
   , fDir(0)
 {
@@ -210,7 +213,9 @@ TStarJetPicoQAHistograms::TStarJetPicoQAHistograms(const char *name, const char 
   , hPhiDeltaPhi(0)
   , hDeltaEtaDeltaPhiProj(0)
   , hDeltaEtaDeltaPhiProjAcc(0)
-  
+  , hdVzClosestVertex(0)
+  , hdVzZerothIdVertex(0)
+
   , fDir(0)
 {
   //
