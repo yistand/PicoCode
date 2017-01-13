@@ -27,6 +27,8 @@ TStarJetPicoPrimaryTrack::TStarJetPicoPrimaryTrack()
   , fTofTime(-9.)
   , fTofBeta(-9.)
   , fTofyLocal(-9.)
+  , fidTruth(0)
+  , fqaTruth(0)
 {
   ;
 }
@@ -56,6 +58,8 @@ TStarJetPicoPrimaryTrack::TStarJetPicoPrimaryTrack(const TStarJetPicoPrimaryTrac
   , fTofTime(t.fTofTime)
   , fTofBeta(t.fTofBeta)
   , fTofyLocal(t.fTofyLocal)
+  , fidTruth(t.fidTruth)
+  , fqaTruth(t.fqaTruth)
 {
   ;
 }
@@ -90,6 +94,8 @@ void TStarJetPicoPrimaryTrack::Clear(Option_t */*Option*/)
   fTofTime = -9.;
   fTofBeta = -9.;
   fTofyLocal = -9.;
+  fidTruth = 0;
+  fqaTruth = 0;
 }
 
 Float_t TStarJetPicoPrimaryTrack::GetEta()
